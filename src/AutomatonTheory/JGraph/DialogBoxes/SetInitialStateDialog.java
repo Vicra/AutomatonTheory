@@ -8,12 +8,13 @@ public class SetInitialStateDialog {
 
     public JComboBox<String> initialStateComboBox = new JComboBox<String>();
     public String newInitialState = "";
+    public int valor;
 
     public SetInitialStateDialog(String[] states){
         States = states;
     }
     public void displayGUI() {
-        JOptionPane.showConfirmDialog(null,
+        valor = JOptionPane.showConfirmDialog(null,
                 getPanel(),
                 "Set Initial State",
                 JOptionPane.OK_CANCEL_OPTION,

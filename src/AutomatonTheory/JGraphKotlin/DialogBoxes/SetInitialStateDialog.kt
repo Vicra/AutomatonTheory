@@ -7,7 +7,7 @@ class SetInitialStateDialog(var States: Array<String>) {
     var initialStateComboBox = JComboBox<String>()
     var newInitialState = ""
     fun displayGUI() {
-        JOptionPane.showConfirmDialog(null,
+        var value:Int = JOptionPane.showConfirmDialog(null,
                 panel,
                 "Set Initial State",
                 JOptionPane.OK_CANCEL_OPTION,

@@ -9,7 +9,7 @@ class RemoveStateDialog(var States: Array<String>) {
     fun displayGUI() {
         JOptionPane.showConfirmDialog(null,
                 panel,
-                "Set Initial State",
+                "Remove State",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE)
         stateToRemove = removeStateComboBox.selectedItem.toString()

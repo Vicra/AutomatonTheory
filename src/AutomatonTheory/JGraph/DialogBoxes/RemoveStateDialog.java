@@ -7,13 +7,13 @@ public class RemoveStateDialog {
     public JComboBox<String> removeStateComboBox = new JComboBox<String>();
     public String stateToRemove = "";
 
-
+    public int valor;
     public RemoveStateDialog(String[] states){
         States = states;
     }
 
     public void displayGUI() {
-        JOptionPane.showConfirmDialog(null,
+        valor = JOptionPane.showConfirmDialog(null,
                 getPanel(),
                 "Set Initial State",
                 JOptionPane.OK_CANCEL_OPTION,

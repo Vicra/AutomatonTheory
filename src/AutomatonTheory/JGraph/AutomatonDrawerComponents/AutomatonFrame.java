@@ -67,10 +67,10 @@ public class AutomatonFrame extends JInternalFrame {
                         String style = node.getStyle();
 
                         if(style.contains("shape=doubleEllipse")){
-                            node.setStyle(style+";shape=ellipse");
+                            graph.setCellStyles(mxConstants.STYLE_SHAPE,"ellipse",new Object[]{node});
                         }
                         else if(style.contains("shape=ellipse")){
-                            node.setStyle(style+";shape=doubleEllipse");
+                            graph.setCellStyles(mxConstants.STYLE_SHAPE,"doubleEllipse",new Object[]{node});
                         }
 
                         graphComponent.refresh();
@@ -90,25 +90,16 @@ public class AutomatonFrame extends JInternalFrame {
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", new Object[]{v1});
             Nodes.add(v1);
         }
+
     }
     public boolean AddState() {
         String nombre = getNameForNewState();
-
-        if(nombre.equals("q0")){
-            if(dfa.addState(new State(nombre, true, false))){
-                mxCell v1 = (mxCell)graph.insertVertex(parent, null, nombre,450,450, circleRadius, circleRadius, "shape=ellipse;perimeter=ellipsePerimeter");
-                Nodes.add(v1);
-                return true;
-            }
+        if(dfa.addState(new State(nombre, false, false))){
+            mxCell v1 = (mxCell)graph.insertVertex(parent, null, nombre,450,450, circleRadius, circleRadius, "shape=ellipse;perimeter=ellipsePerimeter");
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", new Object[]{v1});
+            Nodes.add(v1);
+            return true;
         }
-        else{
-            if(dfa.addState(new State(nombre, false, false))){
-                mxCell v1 = (mxCell)graph.insertVertex(parent, null, nombre,450,450, circleRadius, circleRadius, "shape=ellipse;perimeter=ellipsePerimeter");
-                Nodes.add(v1);
-                return true;
-            }
-        }
-
         return false;
     }
     public boolean AddTransition(String originStateName, String destinyStateName, String symbol){
@@ -117,27 +108,72 @@ public class AutomatonFrame extends JInternalFrame {
         if(originState.addTransition(new Transition(destinyState, symbol))){
             mxCell nodeOrigin = getNode(originStateName);
             mxCell nodeDestiny = getNode(destinyStateName);
-
             mxCell trans;
 
-            if(nodeOrigin.getValue().toString().equals(nodeDestiny.getValue().toString())){
-                trans = (mxCell)(graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny));
+            Boolean hasTwoPaths = false;
+            for(mxCell transition : Transitions){
+                if(transition.getSource().getValue().toString().equals(nodeOrigin.getValue().toString()) &&
+                        transition.getTarget().getValue().toString().equals(nodeDestiny.getValue().toString())){
+                    //get transition and change the value shown
+                    hasTwoPaths = true;
+                    String currentValue = transition.getValue().toString();
+                    transition.setValue(currentValue + " / " + symbol);
+                    graph.refresh();
+                }
             }
-            else{
-                trans = (mxCell)(graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny,"edgeStyle=elbowEdgeStyle;elbow=horizontal;orthogonal=0.5;"
-                        + "entryX=0.5;entryY=0;entryPerimeter=1;rounded=true;arcsize=12"));
+            if(!hasTwoPaths){
+                if(nodeOrigin.getValue().toString().equals(nodeDestiny.getValue().toString())){
+                    trans = (mxCell)(graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny));
+                }
+                else{
+                    trans = (mxCell)(graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny,"edgeStyle=elbowEdgeStyle;elbow=horizontal;orthogonal=0.5;"
+                            + "entryX=0.5;entryY=0;entryPerimeter=1;rounded=true;arcsize=12"));
+                }
+                Transitions.add(trans);
             }
-
-            Transitions.add(trans);
-            return false;
+            return true;
         }
         else{
             return false;
         }
     }
 
-    public boolean SetInitialState(String state){
-        return true;
+    public boolean RemoveState(String stateName){
+        if(dfa.removeState(stateName)){
+            mxCell node = getNode(stateName);
+
+            //remove transitions
+            for(mxCell item : Transitions){
+                if(item.getSource().getValue().toString().equals(stateName) ||
+                        item.getTarget().getValue().toString().equals(stateName)){
+                    graph.removeCells(new Object[]{item});
+                    Transitions.remove(item);
+                }
+            }
+
+            //remove state
+            graph.removeCells(new Object[]{node});
+            Nodes.remove(node);
+
+            return true;
+        }
+        return false;
+    }
+
+    public boolean SetInitialState(String stateName){
+        if(dfa.get_automaton().setInitialState(stateName)){
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7");
+            for(mxCell node : Nodes){
+                if(node.getValue().toString().equals(stateName)){
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#9FF781", new Object[]{node});
+                }
+                else{
+                    graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", new Object[]{node});
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean setAcceptanceState(String stateName){
@@ -160,6 +196,7 @@ public class AutomatonFrame extends JInternalFrame {
         }
         return new mxCell();
     }
+
 
     public String getNameForNewState(){
         return "q" + Nodes.size();

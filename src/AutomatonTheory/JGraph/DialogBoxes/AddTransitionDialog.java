@@ -15,14 +15,14 @@ public class AddTransitionDialog {
     public JComboBox<String> detinyStateComboBox = new JComboBox<String>();
     public JComboBox<String> symbolComboBox = new JComboBox<String>();
 
-
+    public int valor;
     public AddTransitionDialog(String[] states, String[] alphabet){
         States = states;
         Alphabet = alphabet;
     }
 
     public void displayGUI() {
-        JOptionPane.showConfirmDialog(null,
+        valor = JOptionPane.showConfirmDialog(null,
                                 getPanel(),
                                 "AddTransition",
                                 JOptionPane.OK_CANCEL_OPTION,

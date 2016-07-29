@@ -55,6 +55,22 @@ open class Automaton() {
     }
 
     fun removeState(state:State) : Boolean{
+        //borra trans que salen de el
+        state.Transitions.removeAll(state.Transitions);
+//        for(trans in state.Transitions){
+//            state.Transitions.remove(trans)
+//        }
+
+        //borra trans que llegan a el
+        for (item in States){
+            var toRemoveTransitions:MutableList<Transition> = ArrayList()
+            for(trans in item.Transitions){
+                if(trans.DestinyState.Name.equals(state.Name)){
+                    toRemoveTransitions.add(trans)
+                }
+            }
+            item.Transitions.removeAll(toRemoveTransitions);
+        }
         return States.remove(state)
     }
 
@@ -131,6 +147,18 @@ open class Automaton() {
         return State("default",true, false)
     }
 
+    fun setInitialState(stateName:String) : Boolean{
+        for(state in States){
+            if(state.Name.equals(stateName)){
+                state.InitialState = true;
+            }
+            else{
+                state.InitialState = false;
+            }
+        }
+        return true;
+    }
+
     fun getState(stateName:String) :State{
         for(state in States){
             if(state.Name.equals(stateName)){
@@ -160,5 +188,24 @@ open class Automaton() {
                 println(transition.Symbol)
             }
         }
+    }
+
+    fun getAutomatonInfo() : String {
+        var returnString :String = ""
+        returnString += "Alphabet:" + "\n"
+        for(symbol in Alphabet){
+            returnString += "  * " + symbol + "\n"
+        }
+        returnString+= "\n" + "States: " + "\n"
+        for(state in States){
+            returnString += " * " + state.Name + ", Initial State: " + state.InitialState + ", Acceptance State: "+ state.AcceptanceState + "\n"
+        }
+        returnString+= "\n" + "Transitions: " + "\n"
+        for(state in States){
+            for(transition in state.Transitions){
+                returnString += " * Origin State: " + state.Name + ", Destiny State: " + transition.DestinyState.Name + ", Symbol: " + transition.Symbol + "\n"
+            }
+        }
+        return returnString
     }
 }
