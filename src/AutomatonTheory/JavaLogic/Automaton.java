@@ -13,14 +13,14 @@ public abstract class Automaton {
     abstract boolean addTransition(String originStateName, String destinyStateName, String symbol);
 
     //region States
-    boolean addState(State newState){
+    public boolean addState(State newState){
         if(!existsState(newState.Name)){
             return States.add(newState);
         }
         return false;
     }
 
-    boolean removeState(String stateName){
+    public boolean removeState(String stateName){
         State originState = getState(stateName);
         //borra las transiciones que salen de el
         originState.Transitions.removeAll(originState.Transitions);
@@ -40,7 +40,7 @@ public abstract class Automaton {
         return States.remove(originState);
     }
 
-    boolean existsState(String stateName){
+    public boolean existsState(String stateName){
         for(State state : States){
             if(state.Name.equals(stateName)){
                 return true;
@@ -49,7 +49,7 @@ public abstract class Automaton {
         return false;
     }
 
-    boolean toggleAcceptanceState(String stateName){
+    public boolean toggleAcceptanceState(String stateName){
         for(State state : States){
             if(state.Name.equals(stateName)){
                 state.AcceptanceState = !state.AcceptanceState;
@@ -59,7 +59,7 @@ public abstract class Automaton {
         return false;
     }
 
-    State getInitialState(){
+    public State getInitialState(){
         for(State state : States){
             if(state.InitialState){
                 return state;
@@ -68,7 +68,7 @@ public abstract class Automaton {
         return new State();
     }
 
-    boolean setInitialState(String stateName){
+    public boolean setInitialState(String stateName){
         for(State state : States){
             if(state.Name.equals(stateName)){
                 state.InitialState = true;
@@ -80,7 +80,7 @@ public abstract class Automaton {
         return true;
     }
 
-    State getState(String stateName){
+    public State getState(String stateName){
         for(State state : States){
             if(state.Name.equals(stateName)){
                 return state;
@@ -125,7 +125,7 @@ public abstract class Automaton {
     }
     //endregion
 
-    String getAutomatonInfo(){
+    public String getAutomatonInfo(){
         String returnString  = "";
         returnString += "Alphabet:" + "\n";
         for(String symbol : Alphabet){
@@ -144,8 +144,20 @@ public abstract class Automaton {
         return returnString;
     }
 
-    boolean setAlphabet(List<String> alphabet){
+    public boolean setAlphabet(List<String> alphabet){
         Alphabet = alphabet;
         return true;
+    }
+
+    public String[] getStatesNames(){
+        List<String> states = new ArrayList<String>();
+        for(State state : States){
+            states.add(state.Name);
+        }
+        return states.toArray(new String[0]);
+    }
+
+    public String[] getAllAlphabet(){
+        return Alphabet.toArray(new String[0]);
     }
 }

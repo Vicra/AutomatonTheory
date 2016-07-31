@@ -137,17 +137,17 @@ public class MainWindow extends JPanel implements ActionListener {
         if(e.getActionCommand().equals("addState")){
             iframe.AddState();
             actionsTextArea.append("State Added\n");
-            automatonInfoTextArea.setText(iframe.dfa.get_automaton().getAutomatonInfo());
+            automatonInfoTextArea.setText(iframe.automaton.getAutomatonInfo());
             return;
         }
         if(e.getActionCommand().equals("addTransition")){
-            AddTransitionDialog dialog = new AddTransitionDialog(iframe.dfa.get_automaton().getStatesNames(),
-                                                                (iframe.dfa.get_automaton().getAllAlphabet()));
+            AddTransitionDialog dialog = new AddTransitionDialog(iframe.automaton.getStatesNames(),
+                                                                (iframe.automaton.getAllAlphabet()));
             dialog.displayGUI();
             if(dialog.valor == 0){
                 if(iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)){
                     actionsTextArea.append("Transition added origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n");
-                    automatonInfoTextArea.setText(iframe.dfa.get_automaton().getAutomatonInfo());
+                    automatonInfoTextArea.setText(iframe.automaton.getAutomatonInfo());
                 }
                 JOptionPane.showMessageDialog(this, "No se agrego la transicion");
             }
@@ -164,20 +164,20 @@ public class MainWindow extends JPanel implements ActionListener {
             return;
         }
         if(e.getActionCommand().equals("removeState")){
-            RemoveStateDialog dialog = new RemoveStateDialog(iframe.dfa.get_automaton().getStatesNames());
+            RemoveStateDialog dialog = new RemoveStateDialog(iframe.automaton.getStatesNames());
             dialog.displayGUI();
             if(dialog.valor == 0){
                 String stateName = dialog.stateToRemove;
 
                 if(iframe.RemoveState(stateName)){
                     actionsTextArea.append("State Removed: " + stateName + "\n");
-                    automatonInfoTextArea.setText(iframe.dfa.get_automaton().getAutomatonInfo());
+                    automatonInfoTextArea.setText(iframe.automaton.getAutomatonInfo());
                 }
             }
             return;
         }
         if(e.getActionCommand().equals("setInitialState")){//setInitialState
-            SetInitialStateDialog dialog = new SetInitialStateDialog(iframe.dfa.get_automaton().getStatesNames());
+            SetInitialStateDialog dialog = new SetInitialStateDialog(iframe.automaton.getStatesNames());
             dialog.displayGUI();
             String state = dialog.newInitialState;
 
@@ -186,13 +186,13 @@ public class MainWindow extends JPanel implements ActionListener {
                     mxCell node = iframe.getNode(state);
                     //iframe.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#9FF781", new Object[]{node});
                     actionsTextArea.append("State: " + state + " set as initial state \n");
-                    automatonInfoTextArea.setText(iframe.dfa.get_automaton().getAutomatonInfo());
+                    automatonInfoTextArea.setText(iframe.automaton.getAutomatonInfo());
                 }
             }
             return;
         }
         if(e.getActionCommand().equals("updateAutomaton")){
-            automatonInfoTextArea.setText(iframe.dfa.get_automaton().getAutomatonInfo());
+            automatonInfoTextArea.setText(iframe.automaton.getAutomatonInfo());
             return;
         }
     }

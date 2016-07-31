@@ -1,8 +1,9 @@
 package AutomatonTheory.JGraph.AutomatonDrawerComponents;
 
-import AutomatonTheory.Logic.DeterministicFiniteAutomaton;
-import AutomatonTheory.Logic.State;
-import AutomatonTheory.Logic.Transition;
+import AutomatonTheory.JavaLogic.Automaton;
+import AutomatonTheory.JavaLogic.DeterministicFiniteAutomaton;
+import AutomatonTheory.JavaLogic.State;
+import AutomatonTheory.JavaLogic.Transition;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.swing.handler.mxKeyboardHandler;
 import com.mxgraph.swing.handler.mxRubberband;
@@ -17,7 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutomatonFrame extends JInternalFrame {
-    public DeterministicFiniteAutomaton dfa = new DeterministicFiniteAutomaton();
+
+    public Automaton automaton = new DeterministicFiniteAutomaton("automaton");
     public List<mxCell> Nodes = new ArrayList<mxCell>();
     public List<mxCell> Transitions  = new ArrayList<mxCell>();
 
@@ -85,7 +87,7 @@ public class AutomatonFrame extends JInternalFrame {
 
     private void AddState(MouseEvent e) {
         String nombre = getNameForNewState();
-        if(dfa.addState(new State(nombre, false, false))){
+        if(automaton.addState(new State(nombre, false, false))){
             mxCell v1 = (mxCell)graph.insertVertex(parent, null, nombre, e.getX() - 25, e.getY() - 25, circleRadius, circleRadius, "shape=ellipse;perimeter=ellipsePerimeter");
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", new Object[]{v1});
             Nodes.add(v1);
@@ -94,7 +96,7 @@ public class AutomatonFrame extends JInternalFrame {
     }
     public boolean AddState() {
         String nombre = getNameForNewState();
-        if(dfa.addState(new State(nombre, false, false))){
+        if(automaton.addState(new State(nombre, false, false))){
             mxCell v1 = (mxCell)graph.insertVertex(parent, null, nombre,450,450, circleRadius, circleRadius, "shape=ellipse;perimeter=ellipsePerimeter");
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", new Object[]{v1});
             Nodes.add(v1);
@@ -103,8 +105,8 @@ public class AutomatonFrame extends JInternalFrame {
         return false;
     }
     public boolean AddTransition(String originStateName, String destinyStateName, String symbol){
-        State originState = dfa.get_automaton().getState(originStateName);
-        State destinyState = dfa.get_automaton().getState(destinyStateName);
+        State originState = automaton.getState(originStateName);
+        State destinyState = automaton.getState(destinyStateName);
         if(originState.addTransition(new Transition(destinyState, symbol))){
             mxCell nodeOrigin = getNode(originStateName);
             mxCell nodeDestiny = getNode(destinyStateName);
@@ -139,7 +141,7 @@ public class AutomatonFrame extends JInternalFrame {
     }
 
     public boolean RemoveState(String stateName){
-        if(dfa.removeState(stateName)){
+        if(automaton.removeState(stateName)){
             mxCell node = getNode(stateName);
 
             //remove transitions
@@ -161,7 +163,7 @@ public class AutomatonFrame extends JInternalFrame {
     }
 
     public boolean SetInitialState(String stateName){
-        if(dfa.get_automaton().setInitialState(stateName)){
+        if(automaton.setInitialState(stateName)){
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7");
             for(mxCell node : Nodes){
                 if(node.getValue().toString().equals(stateName)){
@@ -176,16 +178,12 @@ public class AutomatonFrame extends JInternalFrame {
         return false;
     }
 
-    public boolean setAcceptanceState(String stateName){
-        return dfa.get_automaton().setAcceptanceState(stateName);
-    }
-
     public boolean toggleAcceptanceState(String stateName){
-        return dfa.get_automaton().toggleAcceptanceState(stateName);
+        return automaton.toggleAcceptanceState(stateName);
     }
 
     public boolean EvaluateAutomaton(String evaluateString){
-        return dfa.evaluateString(evaluateString);
+        return automaton.evaluateString(evaluateString);
     }
 
     public mxCell getNode(String nodeName){

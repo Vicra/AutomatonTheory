@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class Console {
     public static void main(String [] args){
         FileManager fm = new FileManager();
-        Automaton dfa = new DeterministicFiniteAutomaton("dfa", Arrays.asList("0","1"));
+        Automaton dfa = new DeterministicFiniteAutomaton("automaton", Arrays.asList("0","1"));
 
         State q0 = new State("q0", true, false);
         State q1 = new State("q1", false, true);
@@ -18,7 +18,7 @@ public class Console {
 
         fm.saveAutomaton(dfa);
 
-        Automaton readAutomaton = fm.loadAutomaton("dfa");
+        Automaton readAutomaton = fm.loadAutomaton("automaton");
         if(readAutomaton.evaluateString("01010101010")){
             System.out.println("paso");
         }

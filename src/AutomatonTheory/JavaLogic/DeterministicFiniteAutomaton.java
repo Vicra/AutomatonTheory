@@ -52,21 +52,19 @@ public class DeterministicFiniteAutomaton extends Automaton {
     boolean addTransition(String originStateName, String destinyStateName, String symbol) {
         State originState = getState(originStateName);
         State destinyState = getState(destinyStateName);
-        //validar que la transicion no exista
-        if(!existsTransition(originStateName, destinyStateName, symbol)){
-            //validar que el origen y symbol no se pueden repetir
-            boolean canAddTransition = true;
-            for(State state : States){
-                for(Transition transition : state.Transitions){
-                    if(state.Name.equals(originStateName) &&
-                            transition.Symbol.equals(symbol)){
-                        canAddTransition = false;
-                    }
+
+        //validar que el origen y symbol no se pueden repetir
+        boolean canAddTransition = true;
+        for(State state : States){
+            for(Transition transition : state.Transitions){
+                if(state.Name.equals(originStateName) &&
+                        transition.Symbol.equals(symbol)){
+                    canAddTransition = false;
                 }
             }
-            if(canAddTransition){
-                return originState.addTransition(new Transition(destinyState, symbol));
-            }
+        }
+        if(canAddTransition){
+            return originState.addTransition(new Transition(destinyState, symbol));
         }
         return false;
     }
