@@ -2,24 +2,24 @@ package AutomatonTheory.Kotlin.AutomatonLogic
 
 import java.util.*
 
-open abstract class Automaton {
-    open var AutomatonName = ""
-    open var States: MutableList<State> = ArrayList()
-    open var Alphabet: List<String> = ArrayList()
-    open var Type = Automatons.DFA
+public abstract class Automaton {
+    public var AutomatonName = ""
+    public var States: MutableList<State> = ArrayList()
+    public var Alphabet: MutableList<String> = ArrayList()
+    public var Type = Automatons.DFA
 
-    open abstract fun evaluateString(stringEvaluate: String): Boolean
-    open abstract fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean
+    public abstract fun evaluateString(stringEvaluate: String): Boolean
+    public abstract fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean
 
     //region States
-    fun addState(newState: State): Boolean {
+    public fun addState(newState: State): Boolean {
         if (!existsState(newState.Name)) {
             return States.add(newState)
         }
         return false
     }
 
-    fun removeState(stateName: String): Boolean {
+    public fun removeState(stateName: String): Boolean {
         val originState = getState(stateName)
         //borra las transiciones que salen de el
         originState.Transitions.removeAll(originState.Transitions)
@@ -39,7 +39,7 @@ open abstract class Automaton {
         return States.remove(originState)
     }
 
-    fun existsState(stateName: String): Boolean {
+    public fun existsState(stateName: String): Boolean {
         for (state in States) {
             if (state.Name == stateName) {
                 return true
@@ -48,7 +48,7 @@ open abstract class Automaton {
         return false
     }
 
-    fun toggleAcceptanceState(stateName: String): Boolean {
+    public fun toggleAcceptanceState(stateName: String): Boolean {
         for (state in States) {
             if (state.Name == stateName) {
                 state.AcceptanceState = !state.AcceptanceState
@@ -58,17 +58,16 @@ open abstract class Automaton {
         return false
     }
 
-    val initialState: State
-        get() {
-            for (state in States) {
-                if (state.InitialState) {
-                    return state
-                }
+    public fun getInitialState() : State{
+        for (state in States) {
+            if (state.InitialState) {
+                return state
             }
-            return State()
         }
+        return State()
+    }
 
-    fun setInitialState(stateName: String): Boolean {
+    public fun setInitialState(stateName: String): Boolean {
         for (state in States) {
             if (state.Name == stateName) {
                 state.InitialState = true
@@ -79,7 +78,7 @@ open abstract class Automaton {
         return true
     }
 
-    fun getState(stateName: String): State {
+    public fun getState(stateName: String): State {
         for (state in States) {
             if (state.Name == stateName) {
                 return state
@@ -90,7 +89,7 @@ open abstract class Automaton {
     //endregion
 
     //region Transitions
-    internal fun removeTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
+    public fun removeTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         val originState = getState(originStateName)
         val transition = getTransition(originStateName, destinyStateName, symbol)
         if (transition != null) {
@@ -99,7 +98,7 @@ open abstract class Automaton {
         return false
     }
 
-    internal fun getTransition(originStateName: String, destinyStateName: String, symbol: String): Transition? {
+    public fun getTransition(originStateName: String, destinyStateName: String, symbol: String): Transition? {
         for (state in States) {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName && transition.DestinyState.Name == destinyStateName && transition.Symbol == symbol) {
@@ -110,7 +109,7 @@ open abstract class Automaton {
         return null
     }
 
-    internal fun existsTransition(originStateName: String, destinyStatName: String, symbol: String): Boolean? {
+    public fun existsTransition(originStateName: String, destinyStatName: String, symbol: String): Boolean? {
         for (state in States) {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName &&
@@ -124,40 +123,39 @@ open abstract class Automaton {
     }
     //endregion
 
-    val automatonInfo: String
-        get() {
-            var returnString = ""
-            returnString += "Alphabet:" + "\n"
-            for (symbol in Alphabet) {
-                returnString += "  * " + symbol + "\n"
-            }
-            returnString += "\n" + "States: " + "\n"
-            for (state in States) {
-                returnString += " * " + state.Name + ", Initial State: " + state.InitialState + ", Acceptance State: " + state.AcceptanceState + "\n"
-            }
-            returnString += "\n" + "Transitions: " + "\n"
-            for (state in States) {
-                for (transition in state.Transitions) {
-                    returnString += " * Origin State: " + state.Name + ", Destiny State: " + transition.DestinyState.Name + ", Symbol: " + transition.Symbol + "\n"
-                }
-            }
-            return returnString
+    public fun getAutomatonInfo() : String {
+        var returnString = ""
+        returnString += "Alphabet:" + "\n"
+        for (symbol in Alphabet) {
+            returnString += "  * " + symbol + "\n"
         }
+        returnString += "\n" + "States: " + "\n"
+        for (state in States) {
+            returnString += " * " + state.Name + ", Initial State: " + state.InitialState + ", Acceptance State: " + state.AcceptanceState + "\n"
+        }
+        returnString += "\n" + "Transitions: " + "\n"
+        for (state in States) {
+            for (transition in state.Transitions) {
+                returnString += " * Origin State: " + state.Name + ", Destiny State: " + transition.DestinyState.Name + ", Symbol: " + transition.Symbol + "\n"
+            }
+        }
+        return returnString
+    }
 
-    fun setAlphabet(alphabet: List<String>): Boolean {
+    public fun setAlphabet(alphabet: MutableList<String>): Boolean {
         Alphabet = alphabet
         return true
     }
 
-    val statesNames: Array<String>
-        get() {
-            val states = ArrayList<String>()
-            for (state in States) {
-                states.add(state.Name)
-            }
-            return states.toTypedArray()
+    public fun getStatesNames() : Array<String> {
+        val states = ArrayList<String>()
+        for (state in States) {
+            states.add(state.Name)
         }
+        return states.toTypedArray()
+    }
 
-    val allAlphabet: Array<String>
-        get() = Alphabet.toTypedArray()
+    public fun getAllAlphabet() : Array<String>{
+        return Alphabet.toTypedArray()
+    }
 }

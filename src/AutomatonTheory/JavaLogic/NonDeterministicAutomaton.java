@@ -12,12 +12,12 @@ public class NonDeterministicAutomaton extends Automaton {
     }
 
     @Override
-    boolean evaluateString(String stringEvaluate) {
+    public boolean evaluateString(String stringEvaluate) {
         return false;
     }
 
     @Override
-    boolean addTransition(String originStateName, String destinyStateName, String symbol) {
+    public boolean addTransition(String originStateName, String destinyStateName, String symbol) {
         return false;
     }
 }

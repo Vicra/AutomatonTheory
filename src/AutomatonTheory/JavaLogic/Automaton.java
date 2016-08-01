@@ -9,8 +9,8 @@ public abstract class Automaton {
     List<String> Alphabet = new ArrayList<String>();
     Automatons Type = Automatons.DFA;
 
-    abstract boolean evaluateString(String stringEvaluate);
-    abstract boolean addTransition(String originStateName, String destinyStateName, String symbol);
+    public abstract boolean evaluateString(String stringEvaluate);
+    public abstract boolean addTransition(String originStateName, String destinyStateName, String symbol);
 
     //region States
     public boolean addState(State newState){

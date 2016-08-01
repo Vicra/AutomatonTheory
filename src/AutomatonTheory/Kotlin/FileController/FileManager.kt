@@ -1,4 +1,3 @@
-package AutomatonTheory.Kotlin.FileController
-
-class FileManager {
+class FileManager{
+    
 }

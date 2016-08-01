@@ -15,7 +15,7 @@ public class DeterministicFiniteAutomaton extends Automaton {
     }
 
     @Override
-    boolean evaluateString(String evaluationString) {
+    public boolean evaluateString(String evaluationString) {
         char[] characters = evaluationString.toCharArray();
         State currentState = getInitialState();
 
@@ -49,7 +49,7 @@ public class DeterministicFiniteAutomaton extends Automaton {
     }
 
     @Override
-    boolean addTransition(String originStateName, String destinyStateName, String symbol) {
+    public boolean addTransition(String originStateName, String destinyStateName, String symbol) {
         State originState = getState(originStateName);
         State destinyState = getState(destinyStateName);
 
