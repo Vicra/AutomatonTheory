@@ -1,7 +1,9 @@
 package AutomatonTheory.Kotlin.Swing
 
+import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.AddTransitionDialog
+import AutomatonTheory.Kotlin.Swing.DialogBoxes.CreateAutomatonDialog
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.RemoveStateDialog
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.SetInitialStateDialog
 import java.awt.Dimension
@@ -12,13 +14,11 @@ import javax.swing.*
 class MainWindow : JPanel(), ActionListener {
     val splitPane: JSplitPane
 
-
-    internal var iframe = AutomatonFrame()
+    internal var iframe = AutomatonFrame(DeterministicFiniteAutomaton("dfa", mutableListOf("0","1")))
     internal var scrollPaneAutomatonLog: JScrollPane
     internal var scrollPaneAutomatonInfo: JScrollPane
     internal var actionsTextArea = JTextArea()
     internal var automatonInfoTextArea = JTextArea()
-
 
     internal var field = JTextField()
 
@@ -26,6 +26,33 @@ class MainWindow : JPanel(), ActionListener {
     private val buttonsHeight = 40
 
     init {
+
+        //new code
+        val repainter = Thread(Runnable {
+            while (true) { // I recommend setting a condition for your panel being open/visible
+                repaint()
+                updateUI()
+                try {
+                    Thread.sleep(30)
+                } catch (ignored: InterruptedException) {
+                }
+
+            }
+        })
+        repainter.name = "Panel repaint"
+        repainter.priority = Thread.MIN_PRIORITY
+        repainter.start()
+        //new code
+
+        val dialog = CreateAutomatonDialog()
+        dialog.displayGUI()
+
+        if(dialog.valor == 0){
+            if(dialog.automatonType == "DFA"){
+                iframe = AutomatonFrame(DeterministicFiniteAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
+            }
+        }
+
         val leftBarOptions = JScrollPane()
 
         //add State Button
@@ -126,7 +153,9 @@ class MainWindow : JPanel(), ActionListener {
                     actionsTextArea.append("Transition added origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n")
                     automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
                 }
-                JOptionPane.showMessageDialog(this, "No se agrego la transicion")
+                else{
+                    JOptionPane.showMessageDialog(this, "No se agrego la transicion")
+                }
             }
             return
         }
@@ -182,7 +211,25 @@ class MainWindow : JPanel(), ActionListener {
             frame.contentPane.add(mainWindow.splitPane)
             frame.extendedState = JFrame.MAXIMIZED_BOTH
             frame.pack()
-            frame.isVisible = true
+
+            var menuBar:JMenuBar = JMenuBar()
+            var menu:JMenu = JMenu("menu")
+            menu.getAccessibleContext().setAccessibleDescription("Actions Menu")
+            menuBar.add(menu)
+
+            var createAutomatonItem = JMenuItem("Create Automaton")
+            createAutomatonItem.getAccessibleContext().setAccessibleDescription("Create New Automaton")
+            menu.add(createAutomatonItem)
+
+            var saveAutomatonItem = JMenuItem("Save Automaton")
+            saveAutomatonItem.getAccessibleContext().setAccessibleDescription("Save Automaton")
+            menu.add(saveAutomatonItem)
+
+            var openAutomatonItem = JMenuItem("Open Automaton")
+            openAutomatonItem.getAccessibleContext().setAccessibleDescription("Open Automaton")
+            menu.add(openAutomatonItem)
+
+            frame.setJMenuBar(menuBar)
         }
 
         @JvmStatic fun main(args: Array<String>) {

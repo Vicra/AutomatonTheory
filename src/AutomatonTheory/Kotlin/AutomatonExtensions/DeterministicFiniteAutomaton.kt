@@ -56,6 +56,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName && transition.Symbol == symbol) {
                     canAddTransition = false
+                    return false;
                 }
             }
         }

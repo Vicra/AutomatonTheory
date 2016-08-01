@@ -125,6 +125,8 @@ public abstract class Automaton {
 
     public fun getAutomatonInfo() : String {
         var returnString = ""
+        returnString += "Name:" + AutomatonName + "\n"
+        returnString += "Type:" + Type.name + "\n" + "\n"
         returnString += "Alphabet:" + "\n"
         for (symbol in Alphabet) {
             returnString += "  * " + symbol + "\n"

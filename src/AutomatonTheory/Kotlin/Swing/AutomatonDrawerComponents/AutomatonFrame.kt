@@ -1,6 +1,5 @@
 package AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents
 
-import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
 import AutomatonTheory.Kotlin.AutomatonLogic.State
 import AutomatonTheory.Kotlin.AutomatonLogic.Transition
@@ -15,11 +14,10 @@ import java.awt.event.MouseEvent
 import java.util.*
 import javax.swing.JInternalFrame
 
-class AutomatonFrame : JInternalFrame("Automaton Grapher!") {
+class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!") {
 
-    var alphabet:MutableList<String> = mutableListOf("0","1")
-
-    var automaton: Automaton = DeterministicFiniteAutomaton("automaton",alphabet)
+    //var alphabet:MutableList<String> = mutableListOf("0","1")
+    var automaton: Automaton = automaton
     var Nodes: MutableList<mxCell> = ArrayList()
     var Transitions: MutableList<mxCell> = ArrayList()
 
@@ -27,6 +25,7 @@ class AutomatonFrame : JInternalFrame("Automaton Grapher!") {
 
     internal val graph = mxGraph()
     internal var parent = graph.defaultParent
+
 
     init {
 
