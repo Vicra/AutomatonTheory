@@ -2,7 +2,6 @@ package AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents
 
 import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
 import AutomatonTheory.Kotlin.AutomatonLogic.State
-import AutomatonTheory.Kotlin.AutomatonLogic.Transition
 import com.mxgraph.model.mxCell
 import com.mxgraph.swing.handler.mxKeyboardHandler
 import com.mxgraph.swing.handler.mxRubberband
@@ -105,7 +104,7 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
     fun AddTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         val originState = automaton.getState(originStateName)
         val destinyState = automaton.getState(destinyStateName)
-        if (originState.addTransition(Transition(destinyState, symbol))) {
+        if(automaton.addTransition(originStateName,destinyStateName,symbol)){
             val nodeOrigin = getNode(originStateName)
             val nodeDestiny = getNode(destinyStateName)
             val trans: mxCell
@@ -129,7 +128,8 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
                 Transitions.add(trans)
             }
             return true
-        } else {
+        }
+        else {
             return false
         }
     }

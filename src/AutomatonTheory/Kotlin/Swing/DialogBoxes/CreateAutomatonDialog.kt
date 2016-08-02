@@ -8,7 +8,7 @@ class CreateAutomatonDialog() {
     var automatonType = ""
 
     var valor: Int = 0
-    var automatonTypes = mutableListOf("DFA", "NFA", "NFe").toTypedArray()
+    var automatonTypes = mutableListOf("DFA", "NFA").toTypedArray()
 
     fun displayGUI() {
         valor = JOptionPane.showConfirmDialog(null,

@@ -1,6 +1,7 @@
 package AutomatonTheory.Kotlin.Swing
 
 import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
+import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.AddTransitionDialog
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.CreateAutomatonDialog
@@ -26,30 +27,15 @@ class MainWindow : JPanel(), ActionListener {
     private val buttonsHeight = 40
 
     init {
-
-        //new code
-        val repainter = Thread(Runnable {
-            while (true) { // I recommend setting a condition for your panel being open/visible
-                repaint()
-                updateUI()
-                try {
-                    Thread.sleep(30)
-                } catch (ignored: InterruptedException) {
-                }
-
-            }
-        })
-        repainter.name = "Panel repaint"
-        repainter.priority = Thread.MIN_PRIORITY
-        repainter.start()
-        //new code
-
         val dialog = CreateAutomatonDialog()
         dialog.displayGUI()
 
         if(dialog.valor == 0){
             if(dialog.automatonType == "DFA"){
                 iframe = AutomatonFrame(DeterministicFiniteAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
+            }
+            if(dialog.automatonType == "NFA"){
+                iframe = AutomatonFrame(NonDeterministicFiniteAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
             }
         }
 
@@ -211,6 +197,7 @@ class MainWindow : JPanel(), ActionListener {
             frame.contentPane.add(mainWindow.splitPane)
             frame.extendedState = JFrame.MAXIMIZED_BOTH
             frame.pack()
+            frame.setVisible(true)
 
             var menuBar:JMenuBar = JMenuBar()
             var menu:JMenu = JMenu("menu")
@@ -229,7 +216,7 @@ class MainWindow : JPanel(), ActionListener {
             openAutomatonItem.getAccessibleContext().setAccessibleDescription("Open Automaton")
             menu.add(openAutomatonItem)
 
-            frame.setJMenuBar(menuBar)
+            //frame.setJMenuBar(menuBar)
         }
 
         @JvmStatic fun main(args: Array<String>) {
