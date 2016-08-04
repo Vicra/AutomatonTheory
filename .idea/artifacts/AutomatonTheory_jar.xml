@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="AutomatonTheory:jar">
+    <output-path>$PROJECT_DIR$/out</output-path>
+    <properties id="ant-postprocessing">
+      <options enabled="true" />
+    </properties>
+    <properties id="ant-preprocessing">
+      <options enabled="true" />
+    </properties>
+    <root id="archive" name="AutomatonTheory.jar">
+      <element id="module-output" name="AutomatonTheory" />
+      <element id="extracted-dir" path="C:/Program Files/Java/jdk1.8.0_91/lib/jgraphx.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/kotlin-runtime.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/kotlin-reflect.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

@@ -27,6 +27,7 @@ class MainWindow : JPanel(), ActionListener {
     private val buttonsHeight = 40
 
     init {
+
         val dialog = CreateAutomatonDialog()
         dialog.displayGUI()
 
@@ -40,6 +41,7 @@ class MainWindow : JPanel(), ActionListener {
         }
 
         val leftBarOptions = JScrollPane()
+
 
         //add State Button
         val addStateButton = JButton("Add State")
@@ -72,6 +74,16 @@ class MainWindow : JPanel(), ActionListener {
         setInitialStateButton.actionCommand = "setInitialState"
         setInitialStateButton.addActionListener(this)
         leftBarOptions.add(setInitialStateButton)
+
+        if(iframe.automaton.Type.toString() == "NFA"){
+            val convertDFAButton = JButton("Convert to DFA")
+            convertDFAButton.setBounds(20, 210, buttonsWidth, buttonsHeight)
+            convertDFAButton.isVisible = true
+            convertDFAButton.actionCommand = "toDFA"
+            convertDFAButton.addActionListener(this)
+            leftBarOptions.add(convertDFAButton)
+        }
+
 
         iframe.setVisible(true)
         val graphViewPane = JScrollPane(iframe)
@@ -185,6 +197,10 @@ class MainWindow : JPanel(), ActionListener {
         if (e.actionCommand == "updateAutomaton") {
             automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
             return
+        }
+        if (e.actionCommand == "toDFA") {
+            var obj = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            println("vamo a calmarno")
         }
     }
 

@@ -33,4 +33,23 @@ open class State {
         }
         return false
     }
+
+    fun getDestinyStates(symbol:String) : MutableList<State> {
+        var destinyStates:MutableList<State> = ArrayList()
+        for(transition in Transitions){
+            if(transition.Symbol == symbol) {
+                destinyStates.add(transition.DestinyState)
+            }
+        }
+        return destinyStates.distinct().toMutableList()
+    }
+
+    fun existsDestinyState(name:String) : Boolean{
+        for(transition in Transitions){
+            if(transition.DestinyState.Name == name){
+                return true
+            }
+        }
+        return false
+    }
 }

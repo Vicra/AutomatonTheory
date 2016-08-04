@@ -15,7 +15,6 @@ import javax.swing.JInternalFrame
 
 class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!") {
 
-    //var alphabet:MutableList<String> = mutableListOf("0","1")
     var automaton: Automaton = automaton
     var Nodes: MutableList<mxCell> = ArrayList()
     var Transitions: MutableList<mxCell> = ArrayList()
