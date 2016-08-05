@@ -52,22 +52,22 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
     }
 
     fun toDeterministicFiniteAutomaton() : DeterministicFiniteAutomaton{
-        var newDeterministicAcutomaton:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
+        var newDeterministicAutomaton:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
         var currentState:State = State()
 
         //agregar todos los estados del nfa a dfa
-        //addStatesFromNFAtoDFA(newDeterministicAcutomaton)
-        //borrar transiciones
+        addStatesFromNFAtoDFA(newDeterministicAutomaton)
 
         for(state in States){
             for(symbol in Alphabet){
                 currentState = getState(state.Name)
                 var destinyStates:MutableList<State> = currentState.getDestinyStates(symbol)
-                //{p,q}  estados on p , q y r
-                newDeterministicAcutomaton.addState(State(currentState.Name,currentState.InitialState,currentState.AcceptanceState))
+                newDeterministicAutomaton.addState(State(currentState.Name,currentState.InitialState,currentState.AcceptanceState))
                 if(destinyStates.size > 0){
                     var newState:State = State()
                     var newStateName = ""
+
+                    //definir nombre nuevo estado
                     for(destinyState in destinyStates){
                         if(newStateName.isEmpty()){
                             newStateName += destinyState.Name
@@ -81,51 +81,52 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
                             newState.AcceptanceState = true
                         }
                     }
+
                     if(newStateName.isNotEmpty()){
                         newState.Name = newStateName
-                        newDeterministicAcutomaton.addState(newState)
-                        newDeterministicAcutomaton.getState(currentState.Name).addTransition(Transition(newState, symbol))
+                        newDeterministicAutomaton.addState(newState)
+                        newDeterministicAutomaton.getState(currentState.Name).addTransition(Transition(newState, symbol))
                     }
                 }
             }
         }
-        for(dfaState in newDeterministicAcutomaton.States){
+        for(dfaState in newDeterministicAutomaton.States){
             for(symbol in Alphabet) {
                 var newStateCompositionName = ""
                 var compositionStates = dfaState.Name.split(",")
-                for (composition in compositionStates) {
-                    var destinyStates:MutableList<State> = getState(composition).getDestinyStates(symbol)
-                    var compositionStateName = ""
-                    for(destiny in destinyStates){
-                        if(compositionStateName.isEmpty()){
-                            compositionStateName = destiny.Name
+                if(compositionStates.size > 1){ //ie: p,q son dos composition states
+                    for (composition in compositionStates) {
+                        var destinyStates:MutableList<State> = getState(composition).getDestinyStates(symbol)
+                        var compositionStateName = ""
+                        for(destiny in destinyStates){
+                            if(compositionStateName.isEmpty()){
+                                compositionStateName = destiny.Name
+                            }
+                            else{
+                                compositionStateName += "," + destiny.Name
+                            }
+                        }
+                        if(newStateCompositionName.isEmpty()){
+                            newStateCompositionName += compositionStateName
                         }
                         else{
-                            compositionStateName += "," + destiny.Name
+                            if(compositionStateName.isNotEmpty()){
+                                newStateCompositionName += "," + compositionStateName
+                            }
                         }
                     }
-                    if(newStateCompositionName.isEmpty()){
-                        newStateCompositionName += compositionStateName
-                    }
-                    else{
-                        newStateCompositionName += "," + compositionStateName
-                    }
+                    var newState:State = newDeterministicAutomaton.getState(newStateCompositionName)
+                    dfaState.addTransition(Transition(newState,symbol))
                 }
-                var newState:State = newDeterministicAcutomaton.getState(newStateCompositionName)
-                dfaState.addTransition(Transition(newState,symbol))
             }
         }
         //eliminar estados busqueda a profundidad
-        return newDeterministicAcutomaton
+        return newDeterministicAutomaton
     }
 
     fun addStatesFromNFAtoDFA(dfa:DeterministicFiniteAutomaton) : Unit{
         for(state in States){
-            dfa.addState(state)
-        }
-
-        for(state in dfa.States){
-            state.Transitions.clear()
+            dfa.addState(State(state.Name,state.InitialState, state.AcceptanceState))
         }
     }
 }

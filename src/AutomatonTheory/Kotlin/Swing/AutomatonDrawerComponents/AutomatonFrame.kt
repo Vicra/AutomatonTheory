@@ -155,6 +155,7 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
     }
 
     fun EvaluateAutomaton(evaluationString :String) : Boolean{
+        println("llegue")
         return automaton.evaluateString(evaluationString);
     }
 
