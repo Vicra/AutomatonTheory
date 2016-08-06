@@ -10,6 +10,7 @@ import AutomatonTheory.Kotlin.Swing.DialogBoxes.SetInitialStateDialog
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.util.*
 import javax.swing.*
 
 class MainWindow : JPanel(), ActionListener {
@@ -143,18 +144,7 @@ class MainWindow : JPanel(), ActionListener {
             return
         }
         if (e.actionCommand == "addTransition") {
-            val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),
-                    iframe.automaton.getAllAlphabet())
-            dialog.displayGUI()
-            if (dialog.valor == 0) {
-                if (iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)) {
-                    actionsTextArea.append("Transition added origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n")
-                    automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
-                }
-                else{
-                    JOptionPane.showMessageDialog(this, "No se agrego la transicion")
-                }
-            }
+            AddTransitionToFrame()
             return
         }
         if (e.actionCommand == "evaluate") {
@@ -199,9 +189,66 @@ class MainWindow : JPanel(), ActionListener {
             return
         }
         if (e.actionCommand == "toDFA") {
-            var obj = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            var dfa:DeterministicFiniteAutomaton = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            //clean current
+
+
+            for(state in iframe.Nodes){
+                val node = iframe.getNode(state.getValue().toString())
+                iframe.graph.removeCells(arrayOf<Any>(node))
+            }
+            iframe.Nodes.clear()
+            iframe.Transitions.clear()
+            iframe.graph.refresh()
+            //iframe = AutomatonFrame(dfa)
+            iframe.automaton = dfa
+
+            //display states
+            for(state in dfa.States){
+                var rangeMinx:Double = 20.0
+                var rangeMaxx:Double = 900.0
+                val r = Random()
+                val randomValuex= rangeMinx + (rangeMaxx - rangeMinx) * r.nextDouble()
+
+                var rangeMiny:Double = 20.0
+                var rangeMaxy:Double = 600.0
+                val ry = Random()
+                val randomValuey= rangeMiny + (rangeMaxy - rangeMiny) * ry.nextDouble()
+
+                iframe.AddState(state.Name, state.InitialState, state.AcceptanceState, randomValuex, randomValuey)
+            }
+            iframe.graph.refresh()
+            for(state in dfa.States){
+                for(transition in state.Transitions){
+                    AddTransitionToFrame(state.Name, transition.DestinyState.Name, transition.Symbol)
+                }
+            }
+            iframe.graph.refresh()
+
+
+            //display
             println("vamo a calmarno")
         }
+    }
+
+    private fun AddTransitionToFrame() {
+        val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),
+                iframe.automaton.getAllAlphabet())
+        dialog.displayGUI()
+        if (dialog.valor == 0) {
+            if (iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)) {
+                actionsTextArea.append("Transition added origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n")
+                automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
+            } else {
+                JOptionPane.showMessageDialog(this, "No se agrego la transicion")
+            }
+        }
+    }
+
+    private fun AddTransitionToFrame(originStateName:String, destinyStateName:String, symbol:String) {
+        iframe.AddTransition(originStateName, destinyStateName, symbol)
+        actionsTextArea.append("Transition added origin:" + originStateName + ", destiny: " + destinyStateName + ", symbol: " + symbol + "\n")
+        automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
     }
 
     companion object {

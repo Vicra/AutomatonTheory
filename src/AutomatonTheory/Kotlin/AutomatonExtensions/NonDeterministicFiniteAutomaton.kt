@@ -56,7 +56,7 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
         var currentState:State = State()
 
         //agregar todos los estados del nfa a dfa
-        addStatesFromNFAtoDFA(newDeterministicAutomaton)
+        //addStatesFromNFAtoDFA(newDeterministicAutomaton)
 
         for(state in States){
             for(symbol in Alphabet){
@@ -80,10 +80,12 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
                         if(destinyState.AcceptanceState){
                             newState.AcceptanceState = true
                         }
+
                     }
 
                     if(newStateName.isNotEmpty()){
                         newState.Name = newStateName
+                        newDeterministicAutomaton.addState(State(currentState.Name, currentState.InitialState, currentState.AcceptanceState))
                         newDeterministicAutomaton.addState(newState)
                         newDeterministicAutomaton.getState(currentState.Name).addTransition(Transition(newState, symbol))
                     }
@@ -121,6 +123,9 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
             }
         }
         //eliminar estados busqueda a profundidad
+        for(state in newDeterministicAutomaton.States){
+
+        }
         return newDeterministicAutomaton
     }
 

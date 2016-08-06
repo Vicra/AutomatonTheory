@@ -79,7 +79,7 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
         })
     }
 
-    private fun AddState(e: MouseEvent) {
+    fun AddState(e: MouseEvent) {
         val nombre = nameForNewState
         if (automaton.addState(State(nombre, false, false))) {
             val v1 = graph.insertVertex(parent, null, nombre, (e.x - 25).toDouble(), (e.y - 25).toDouble(), circleRadius.toDouble(), circleRadius.toDouble(), "shape=ellipse;perimeter=ellipsePerimeter") as mxCell
@@ -87,6 +87,22 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
             Nodes.add(v1)
         }
 
+    }
+
+    fun AddState(stateName: String, initialState:Boolean, acceptanceState:Boolean, x:Double, y:Double): Boolean {
+        val nombre = stateName
+        automaton.addState(State(nombre, initialState, acceptanceState))
+        val v1 = graph.insertVertex(parent, null, nombre, x, y, circleRadius.toDouble(), circleRadius.toDouble(), "shape=ellipse;perimeter=ellipsePerimeter") as mxCell
+        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", arrayOf<Any>(v1))
+        Nodes.add(v1)
+        if(initialState){
+            SetInitialState(stateName)
+        }
+        if(acceptanceState){
+            var node = getNode(stateName)
+            graph.setCellStyles(mxConstants.STYLE_SHAPE, "doubleEllipse", arrayOf<Any>(node))
+        }
+        return true
     }
 
     fun AddState(): Boolean {
@@ -103,34 +119,30 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
     fun AddTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         val originState = automaton.getState(originStateName)
         val destinyState = automaton.getState(destinyStateName)
-        if(automaton.addTransition(originStateName,destinyStateName,symbol)){
-            val nodeOrigin = getNode(originStateName)
-            val nodeDestiny = getNode(destinyStateName)
-            val trans: mxCell
+        automaton.addTransition(originStateName,destinyStateName,symbol)
+        val nodeOrigin = getNode(originStateName)
+        val nodeDestiny = getNode(destinyStateName)
+        val trans: mxCell
 
-            var hasTwoPaths: Boolean = false
-            for (transition in Transitions) {
-                if (transition.source.value.toString() == nodeOrigin.value.toString() && transition.target.value.toString() == nodeDestiny.value.toString()) {
-                    //get transition and change the value shown
-                    hasTwoPaths = true
-                    val currentValue = transition.value.toString()
-                    transition.value = currentValue + " / " + symbol
-                    graph.refresh()
-                }
+        var hasTwoPaths: Boolean = false
+        for (transition in Transitions) {
+            if (transition.source.value.toString() == nodeOrigin.value.toString() && transition.target.value.toString() == nodeDestiny.value.toString()) {
+                //get transition and change the value shown
+                hasTwoPaths = true
+                val currentValue = transition.value.toString()
+                transition.value = currentValue + " / " + symbol
+                graph.refresh()
             }
-            if ((!hasTwoPaths)) {
-                if (nodeOrigin.value.toString() == nodeDestiny.value.toString()) {
-                    trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny) as mxCell
-                } else {
-                    trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny, "edgeStyle=elbowEdgeStyle;elbow=horizontal;orthogonal=0.5;" + "entryX=0.5;entryY=0;entryPerimeter=1;rounded=true;arcsize=12") as mxCell
-                }
-                Transitions.add(trans)
+        }
+        if ((!hasTwoPaths)) {
+            if (nodeOrigin.value.toString() == nodeDestiny.value.toString()) {
+                trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny) as mxCell
+            } else {
+                trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny, "edgeStyle=elbowEdgeStyle;elbow=horizontal;orthogonal=0.5;" + "entryX=0.5;entryY=0;entryPerimeter=1;rounded=true;arcsize=12") as mxCell
             }
-            return true
+            Transitions.add(trans)
         }
-        else {
-            return false
-        }
+        return true
     }
 
     fun RemoveState(stateName: String): Boolean {
