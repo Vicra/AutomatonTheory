@@ -2,6 +2,7 @@ package AutomatonTheory.Kotlin.Swing
 
 import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomaton
+import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.AddTransitionDialog
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.CreateAutomatonDialog
@@ -38,6 +39,9 @@ class MainWindow : JPanel(), ActionListener {
             }
             if(dialog.automatonType == "NFA"){
                 iframe = AutomatonFrame(NonDeterministicFiniteAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
+            }
+            if(dialog.automatonType == "NFAe") {
+                iframe = AutomatonFrame(NonDeterministicFiniteEpsilonAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
             }
         }
 
