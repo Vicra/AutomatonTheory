@@ -55,9 +55,6 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
         var newDeterministicAutomaton:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
         var currentState:State = State()
 
-        //agregar todos los estados del nfa a dfa
-        //addStatesFromNFAtoDFA(newDeterministicAutomaton)
-
         for(state in States){
             for(symbol in Alphabet){
                 currentState = getState(state.Name)
@@ -96,7 +93,7 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
             for(symbol in Alphabet) {
                 var newStateCompositionName = ""
                 var compositionStates = dfaState.Name.split(",")
-                if(compositionStates.size > 1){ //ie: p,q son dos composition states
+                if(compositionStates.size > 1){
                     for (composition in compositionStates) {
                         var destinyStates:MutableList<State> = getState(composition).getDestinyStates(symbol)
                         var compositionStateName = ""
@@ -122,16 +119,6 @@ open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() 
                 }
             }
         }
-        //eliminar estados busqueda a profundidad
-        for(state in newDeterministicAutomaton.States){
-
-        }
         return newDeterministicAutomaton
-    }
-
-    fun addStatesFromNFAtoDFA(dfa:DeterministicFiniteAutomaton) : Unit{
-        for(state in States){
-            dfa.addState(State(state.Name,state.InitialState, state.AcceptanceState))
-        }
     }
 }

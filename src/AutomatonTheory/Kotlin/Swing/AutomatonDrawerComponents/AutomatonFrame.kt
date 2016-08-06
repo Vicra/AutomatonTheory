@@ -59,6 +59,7 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
                 }
                 if (buttonType == 3) {
                     val cell = graphComponent.getCellAt(e.x, e.y)
+
                     if (cell != null) {
                         val node = cell as mxCell
                         val style = node.style
@@ -92,7 +93,7 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
     fun AddState(stateName: String, initialState:Boolean, acceptanceState:Boolean, x:Double, y:Double): Boolean {
         val nombre = stateName
         automaton.addState(State(nombre, initialState, acceptanceState))
-        val v1 = graph.insertVertex(parent, null, nombre, x, y, circleRadius.toDouble(), circleRadius.toDouble(), "shape=ellipse;perimeter=ellipsePerimeter") as mxCell
+        val v1 = graph.insertVertex(parent, null, nombre, x, y, circleRadius.toDouble(), circleRadius.toDouble(), "shape=ellipse;perimeter=ellipsePerimeter;editable=0") as mxCell
         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", arrayOf<Any>(v1))
         Nodes.add(v1)
         if(initialState){
@@ -108,7 +109,7 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
     fun AddState(): Boolean {
         val nombre = nameForNewState
         if (automaton.addState(State(nombre, false, false))) {
-            val v1 = graph.insertVertex(parent, null, nombre, 450.0, 450.0, circleRadius.toDouble(), circleRadius.toDouble(), "shape=ellipse;perimeter=ellipsePerimeter") as mxCell
+            val v1 = graph.insertVertex(parent, null, nombre, 450.0, 450.0, circleRadius.toDouble(), circleRadius.toDouble(), "shape=ellipse;perimeter=ellipsePerimeter;editable=0") as mxCell
             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#81BEF7", arrayOf<Any>(v1))
             Nodes.add(v1)
             return true
@@ -143,6 +144,19 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
             Transitions.add(trans)
         }
         return true
+    }
+
+    fun RemoveTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
+        if(automaton.removeTransition(originStateName, destinyStateName, symbol)){
+            for(item in Transitions){
+                if(item.source.value.toString() == originStateName && item.target.value.toString() == destinyStateName && item.value.toString() == symbol){
+                    graph.removeCells(arrayOf<Any>(item))
+                    Transitions.remove(item)
+                    return true
+                }
+            }
+        }
+        return false
     }
 
     fun RemoveState(stateName: String): Boolean {

@@ -4,10 +4,7 @@ import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
-import AutomatonTheory.Kotlin.Swing.DialogBoxes.AddTransitionDialog
-import AutomatonTheory.Kotlin.Swing.DialogBoxes.CreateAutomatonDialog
-import AutomatonTheory.Kotlin.Swing.DialogBoxes.RemoveStateDialog
-import AutomatonTheory.Kotlin.Swing.DialogBoxes.SetInitialStateDialog
+import AutomatonTheory.Kotlin.Swing.DialogBoxes.*
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -35,13 +32,13 @@ class MainWindow : JPanel(), ActionListener {
 
         if(dialog.valor == 0){
             if(dialog.automatonType == "DFA"){
-                iframe = AutomatonFrame(DeterministicFiniteAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
+                iframe = AutomatonFrame(DeterministicFiniteAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
             }
             if(dialog.automatonType == "NFA"){
-                iframe = AutomatonFrame(NonDeterministicFiniteAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
+                iframe = AutomatonFrame(NonDeterministicFiniteAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
             }
             if(dialog.automatonType == "NFAe") {
-                iframe = AutomatonFrame(NonDeterministicFiniteEpsilonAutomaton(dialog.automatonNameTextField.text, mutableListOf("0","1")))
+                iframe = AutomatonFrame(NonDeterministicFiniteEpsilonAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
             }
         }
 
@@ -80,9 +77,17 @@ class MainWindow : JPanel(), ActionListener {
         setInitialStateButton.addActionListener(this)
         leftBarOptions.add(setInitialStateButton)
 
+        //remove a transition
+        val removeTransitionButton = JButton("Remove Transition")
+        removeTransitionButton.setBounds(20, 210, buttonsWidth, buttonsHeight)
+        removeTransitionButton.isVisible = true
+        removeTransitionButton.actionCommand = "removeTransition"
+        removeTransitionButton.addActionListener(this)
+        leftBarOptions.add(removeTransitionButton)
+
         if(iframe.automaton.Type.toString() == "NFA"){
             val convertDFAButton = JButton("Convert to DFA")
-            convertDFAButton.setBounds(20, 210, buttonsWidth, buttonsHeight)
+            convertDFAButton.setBounds(20, 600, buttonsWidth, buttonsHeight)
             convertDFAButton.isVisible = true
             convertDFAButton.actionCommand = "toDFA"
             convertDFAButton.addActionListener(this)
@@ -192,6 +197,21 @@ class MainWindow : JPanel(), ActionListener {
             automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
             return
         }
+        if (e.actionCommand == "removeTransition"){
+            val dialog = RemoveTransitionDialog(iframe.automaton.getStatesNames(),
+                    iframe.automaton.getAllAlphabet())
+            dialog.displayGUI()
+            if (dialog.valor == 0) {
+                if(iframe.RemoveTransition(dialog.originState, dialog.destinyState, dialog.symbol)){
+                    actionsTextArea.append("Transition REMOVED origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n")
+                    automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
+                }
+                else {
+                    JOptionPane.showMessageDialog(this, "Transition not removed")
+                }
+            }
+            return
+        }
         if (e.actionCommand == "toDFA") {
             var dfa:DeterministicFiniteAutomaton = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
             //clean current
@@ -241,7 +261,7 @@ class MainWindow : JPanel(), ActionListener {
         dialog.displayGUI()
         if (dialog.valor == 0) {
             if (iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)) {
-                actionsTextArea.append("Transition added origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n")
+                actionsTextArea.append("Transition ADDED origin:" + dialog.originState + ", destiny: " + dialog.destinyState + ", symbol: " + dialog.symbol + "\n")
                 automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
             } else {
                 JOptionPane.showMessageDialog(this, "No se agrego la transicion")
@@ -251,7 +271,7 @@ class MainWindow : JPanel(), ActionListener {
 
     private fun AddTransitionToFrame(originStateName:String, destinyStateName:String, symbol:String) {
         iframe.AddTransition(originStateName, destinyStateName, symbol)
-        actionsTextArea.append("Transition added origin:" + originStateName + ", destiny: " + destinyStateName + ", symbol: " + symbol + "\n")
+        actionsTextArea.append("Transition ADDED origin:" + originStateName + ", destiny: " + destinyStateName + ", symbol: " + symbol + "\n")
         automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
     }
 
