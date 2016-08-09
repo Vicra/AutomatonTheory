@@ -5,15 +5,18 @@ import AutomatonTheory.Kotlin.AutomatonLogic.Automatons
 import AutomatonTheory.Kotlin.AutomatonLogic.State
 import AutomatonTheory.Kotlin.AutomatonLogic.Transition
 
-open class NonDeterministicFiniteAutomaton(automatonName: String) : Automaton() {
+open class NonDeterministicFiniteAutomaton() : Automaton() {
 
     init {
-        AutomatonName = automatonName
         Type = Automatons.NFA
     }
 
     constructor(automatonName: String, alphabet: MutableList<String>) : this(automatonName) {
         setAlphabet(alphabet)
+    }
+
+    constructor(automatonName: String) : this(){
+        AutomatonName = automatonName
     }
 
     override fun evaluateString(stringEvaluate: String): Boolean {

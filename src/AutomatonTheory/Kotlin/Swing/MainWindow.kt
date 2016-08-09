@@ -5,6 +5,7 @@ import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomato
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.*
+import AutomatonTheory.Kotlin.Swing.FileChooser.FileChooser
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -276,9 +277,10 @@ class MainWindow : JPanel(), ActionListener {
     }
 
     companion object {
+        internal var fileChooser:FileChooser = FileChooser()
 
         private fun createAndShowGUI() {
-            val frame = JFrame("SplitPaneDemo")
+            val frame = JFrame("SplitPaneDemo");
             frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             val mainWindow = MainWindow()
             frame.contentPane.add(mainWindow.splitPane)
@@ -293,17 +295,26 @@ class MainWindow : JPanel(), ActionListener {
 
             var createAutomatonItem = JMenuItem("Create Automaton")
             createAutomatonItem.getAccessibleContext().setAccessibleDescription("Create New Automaton")
+            createAutomatonItem.addActionListener(ActionListener {
+                println("create automaton")
+            })
             menu.add(createAutomatonItem)
 
             var saveAutomatonItem = JMenuItem("Save Automaton")
             saveAutomatonItem.getAccessibleContext().setAccessibleDescription("Save Automaton")
+            saveAutomatonItem.addActionListener(ActionListener{
+                fileChooser.SaveL()
+            })
             menu.add(saveAutomatonItem)
 
             var openAutomatonItem = JMenuItem("Open Automaton")
             openAutomatonItem.getAccessibleContext().setAccessibleDescription("Open Automaton")
+            openAutomatonItem.addActionListener(ActionListener{
+                fileChooser.OpenL()
+            })
             menu.add(openAutomatonItem)
 
-            //frame.setJMenuBar(menuBar)
+            frame.setJMenuBar(menuBar)
         }
 
         @JvmStatic fun main(args: Array<String>) {

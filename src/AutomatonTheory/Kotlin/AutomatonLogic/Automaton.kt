@@ -2,10 +2,10 @@ package AutomatonTheory.Kotlin.AutomatonLogic
 
 import java.util.*
 
-public abstract class Automaton {
+open abstract class Automaton {
     public var AutomatonName = ""
     public var States: MutableList<State> = ArrayList()
-    public var Alphabet: MutableList<String> = ArrayList()
+    open var Alphabet: MutableList<String> = ArrayList()
     public var Type = Automatons.DFA
 
     public abstract fun evaluateString(stringEvaluate: String): Boolean

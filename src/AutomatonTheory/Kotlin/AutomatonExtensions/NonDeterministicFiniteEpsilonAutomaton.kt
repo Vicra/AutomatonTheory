@@ -1,48 +1,88 @@
 package AutomatonTheory.Kotlin.AutomatonExtensions
 
+import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
+import AutomatonTheory.Kotlin.AutomatonLogic.Automatons
 import AutomatonTheory.Kotlin.AutomatonLogic.State
+import AutomatonTheory.Kotlin.AutomatonLogic.Transition
+import java.util.*
 
-open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : NonDeterministicFiniteAutomaton(automatonName) {
+open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Automaton() {
+    var evaluatedStates:MutableList<String> = ArrayList()
+    var epsilonClosure:MutableList<State> = ArrayList()
 
-    var estadosEncontrados:MutableList<State> = mutableListOf<State>()
+    override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
+        val originState = getState(originStateName)
+        val destinyState = getState(destinyStateName)
+        return originState.addTransition(Transition(destinyState, symbol))
+    }
 
     init{
-        Alphabet.add("e")
+        AutomatonName = automatonName
+        Type = Automatons.NFAe
     }
 
     constructor(automatonName: String, alphabet: MutableList<String>) : this(automatonName) {
         setAlphabet(alphabet)
+        Alphabet.add("e")
     }
 
-    fun recursion(currentState:State, cadena:String){
-        var elementos:CharArray = cadena.toCharArray()
-        var clausuraStates:MutableList<State> = getClausura(currentState)
-
-        for(state in clausuraStates){
+    override fun evaluateString(stringEvaluate:String):Boolean{
+        return toNFA().evaluateString(stringEvaluate)
+    }
+    open fun getClosure(state:State){
+        if(!evaluatedStates.contains(state.Name)){
+            epsilonClosure.add( state )
+            evaluatedStates.add( state.Name )
             for(transition in state.Transitions){
-                if(elementos.size == 1){
-                    estadosEncontrados.add(transition.DestinyState)
-                }
-                if(transition.Symbol == elementos[0].toString()){
-                    //quitarle el primer elemento
-                    var substring = cadena.substring(1,cadena.length)
-                    recursion(state, substring)
+                if(transition.Symbol.equals('e')){
+                    var nextState = transition.DestinyState
+                    getClosure( nextState )
                 }
             }
         }
-        println("yes")
     }
 
-    fun getClausura(currentState:State) : MutableList<State> {
-        var clausuraStates:MutableList<State> = mutableListOf()
-        clausuraStates.add(currentState)
+    open fun getReachableStates(closureStates:MutableList<State>, alphabetItem:Char):MutableList<State>{
+        var  reachableStates:MutableList<State> = mutableListOf()
+        for(state in closureStates){
+            for (transition in state.Transitions){
+                if(transition.Symbol.equals(alphabetItem)){
+                    reachableStates.add(transition.DestinyState)
+                }
+            }
+        }
+        closureStates.clear()
+        evaluatedStates.clear()
+        return reachableStates
+    }
+
+    open fun toNFA():NonDeterministicFiniteAutomaton{
+        var nfa:NonDeterministicFiniteAutomaton = NonDeterministicFiniteAutomaton()
+        nfa.Alphabet = Alphabet
+
+        for(thisStates in States) {
+            nfa.States.add(State(thisStates.Name,thisStates.InitialState,thisStates.AcceptanceState))
+        }
+
         for(state in States){
-            for(transition in state.Transitions){
-                if(transition.Symbol == "e"){
-                    clausuraStates.add(transition.DestinyState)
+            for(symbol in Alphabet){
+                getClosure(state)
+                var reachableStates = getReachableStates(epsilonClosure, symbol[0])
+                for(destinyState in reachableStates){
+                    getClosure(destinyState)
                 }
+                for(currentState in epsilonClosure){
+                    var stateToModify = nfa.getState(state.Name)
+
+                    if(currentState.AcceptanceState){
+                        stateToModify.AcceptanceState = true
+                    }
+                    stateToModify.addTransition(Transition(currentState,symbol))
+                }
+                evaluatedStates.clear()
+                epsilonClosure.clear()
             }
         }
-        return clausuraStates
+        return nfa
     }
 }
