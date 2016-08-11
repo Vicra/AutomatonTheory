@@ -3,6 +3,7 @@ package AutomatonTheory.Kotlin.Swing
 import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
+import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
 import AutomatonTheory.Kotlin.FileControllerJava.FileManager
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.*
@@ -321,16 +322,12 @@ class MainWindow : JPanel(), ActionListener {
                     //
                     val fileOut = FileOutputStream(dir + "/" +filename + ".ser")
                     val out = ObjectOutputStream(fileOut)
-                    out.writeObject(mainWindow.iframe)
+                    out.writeObject(mainWindow.iframe.automaton)
                     out.close()
                     fileOut.close()
 
                     //*************
-                    val fileIn = FileInputStream(dir + "/" +filename + ".ser")
-                    val input = ObjectInputStream(fileIn)
-                    val e: AutomatonFrame = input.readObject() as AutomatonFrame
-                    input.close()
-                    fileIn.close()
+
                     //
                     println("dembow")
                 }
@@ -351,6 +348,14 @@ class MainWindow : JPanel(), ActionListener {
                 if (rVal == JFileChooser.APPROVE_OPTION) {
                     filename = openFileChooser.getSelectedFile().getName()
                     dir = openFileChooser.getCurrentDirectory().toString()
+
+                    val fileIn = FileInputStream(dir + "/" +filename)
+                    val input = ObjectInputStream(fileIn)
+                    val e: Automaton = input.readObject() as Automaton
+                    input.close()
+                    fileIn.close()
+
+                    println("dembow")
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
                     filename = "You pressed cancel"

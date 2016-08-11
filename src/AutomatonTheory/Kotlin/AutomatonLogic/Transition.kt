@@ -1,6 +1,8 @@
 package AutomatonTheory.Kotlin.AutomatonLogic
 
-open class Transition {
+import java.io.Serializable
+
+open class Transition : Serializable {
     open var DestinyState = State()
     open var Symbol = ""
 

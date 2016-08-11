@@ -1,6 +1,8 @@
 package AutomatonTheory.Kotlin.AutomatonLogic
 
-enum class Automatons {
+import java.io.Serializable
+
+enum class Automatons : Serializable {
     DFA,
     NFA,
     NFAe

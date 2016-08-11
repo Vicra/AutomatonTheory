@@ -1,8 +1,9 @@
 package AutomatonTheory.Kotlin.AutomatonLogic
 
+import java.io.Serializable
 import java.util.*
 
-open abstract class Automaton {
+open abstract class Automaton : Serializable {
     var AutomatonName = ""
     var States: MutableList<State> = ArrayList()
     open var Alphabet: MutableList<String> = ArrayList()
