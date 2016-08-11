@@ -3,23 +3,23 @@ package AutomatonTheory.Kotlin.AutomatonLogic
 import java.util.*
 
 open abstract class Automaton {
-    public var AutomatonName = ""
-    public var States: MutableList<State> = ArrayList()
+    var AutomatonName = ""
+    var States: MutableList<State> = ArrayList()
     open var Alphabet: MutableList<String> = ArrayList()
-    public var Type = Automatons.DFA
+    var Type = Automatons.DFA
 
-    public abstract fun evaluateString(stringEvaluate: String): Boolean
-    public abstract fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean
+    abstract fun evaluateString(stringEvaluate: String): Boolean
+    abstract fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean
 
     //region States
-    public fun addState(newState: State): Boolean {
+    fun addState(newState: State): Boolean {
         if (!existsState(newState.Name)) {
             return States.add(newState)
         }
         return false
     }
 
-    public fun removeState(stateName: String): Boolean {
+    fun removeState(stateName: String): Boolean {
         val originState = getState(stateName)
         //borra las transiciones que salen de el
         originState.Transitions.removeAll(originState.Transitions)
@@ -39,7 +39,7 @@ open abstract class Automaton {
         return States.remove(originState)
     }
 
-    public fun existsState(stateName: String): Boolean {
+    fun existsState(stateName: String): Boolean {
         for (state in States) {
             if (state.Name == stateName) {
                 return true
@@ -48,7 +48,7 @@ open abstract class Automaton {
         return false
     }
 
-    public fun toggleAcceptanceState(stateName: String): Boolean {
+    fun toggleAcceptanceState(stateName: String): Boolean {
         for (state in States) {
             if (state.Name == stateName) {
                 state.AcceptanceState = !state.AcceptanceState
@@ -58,7 +58,7 @@ open abstract class Automaton {
         return false
     }
 
-    public fun getInitialState() : State{
+    fun getInitialState() : State{
         for (state in States) {
             if (state.InitialState) {
                 return state
@@ -78,7 +78,7 @@ open abstract class Automaton {
         return true
     }
 
-    public fun getState(stateName: String): State {
+    fun getState(stateName: String): State {
         for (state in States) {
             if (state.Name == stateName) {
                 return state
@@ -89,7 +89,7 @@ open abstract class Automaton {
     //endregion
 
     //region Transitions
-    public fun removeTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
+    fun removeTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         val originState = getState(originStateName)
         val transition = getTransition(originStateName, destinyStateName, symbol)
         if (transition != null) {
@@ -98,7 +98,7 @@ open abstract class Automaton {
         return false
     }
 
-    public fun getTransition(originStateName: String, destinyStateName: String, symbol: String): Transition? {
+    fun getTransition(originStateName: String, destinyStateName: String, symbol: String): Transition? {
         for (state in States) {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName && transition.DestinyState.Name == destinyStateName && transition.Symbol == symbol) {
@@ -109,7 +109,7 @@ open abstract class Automaton {
         return null
     }
 
-    public fun existsTransition(originStateName: String, destinyStatName: String, symbol: String): Boolean? {
+    fun existsTransition(originStateName: String, destinyStatName: String, symbol: String): Boolean? {
         for (state in States) {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName &&
@@ -123,7 +123,7 @@ open abstract class Automaton {
     }
     //endregion
 
-    public fun getAutomatonInfo() : String {
+    fun getAutomatonInfo() : String {
         var returnString = ""
         returnString += "Name:" + AutomatonName + "\n"
         returnString += "Type:" + Type.name + "\n" + "\n"
@@ -144,12 +144,12 @@ open abstract class Automaton {
         return returnString
     }
 
-    public fun setAlphabet(alphabet: MutableList<String>): Boolean {
+    fun setAlphabet(alphabet: MutableList<String>): Boolean {
         Alphabet = alphabet
         return true
     }
 
-    public fun getStatesNames() : Array<String> {
+    fun getStatesNames() : Array<String> {
         val states = ArrayList<String>()
         for (state in States) {
             states.add(state.Name)
@@ -157,7 +157,7 @@ open abstract class Automaton {
         return states.toTypedArray()
     }
 
-    public fun getAllAlphabet() : Array<String>{
+    fun getAllAlphabet() : Array<String>{
         return Alphabet.toTypedArray()
     }
 }

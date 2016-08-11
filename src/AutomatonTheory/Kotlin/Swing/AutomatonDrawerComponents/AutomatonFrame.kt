@@ -3,17 +3,17 @@ package AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents
 import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
 import AutomatonTheory.Kotlin.AutomatonLogic.State
 import com.mxgraph.model.mxCell
-import com.mxgraph.swing.handler.mxKeyboardHandler
 import com.mxgraph.swing.handler.mxRubberband
 import com.mxgraph.swing.mxGraphComponent
 import com.mxgraph.util.mxConstants
 import com.mxgraph.view.mxGraph
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.io.Serializable
 import java.util.*
 import javax.swing.JInternalFrame
 
-class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!") {
+class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!") , Serializable {
 
     var automaton: Automaton = automaton
     var Nodes: MutableList<mxCell> = ArrayList()
@@ -38,7 +38,6 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
 
         // Enables rubberband selection
         mxRubberband(graphComponent)
-        mxKeyboardHandler(graphComponent)
         contentPane.add(graphComponent)
 
         graphComponent.graphControl.addMouseListener(object : MouseAdapter() {
@@ -118,32 +117,34 @@ class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!")
     }
 
     fun AddTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
-        val originState = automaton.getState(originStateName)
-        val destinyState = automaton.getState(destinyStateName)
-        automaton.addTransition(originStateName,destinyStateName,symbol)
-        val nodeOrigin = getNode(originStateName)
-        val nodeDestiny = getNode(destinyStateName)
-        val trans: mxCell
+        if(automaton.addTransition(originStateName,destinyStateName,symbol)){
+            val nodeOrigin = getNode(originStateName)
+            val nodeDestiny = getNode(destinyStateName)
+            val trans: mxCell
 
-        var hasTwoPaths: Boolean = false
-        for (transition in Transitions) {
-            if (transition.source.value.toString() == nodeOrigin.value.toString() && transition.target.value.toString() == nodeDestiny.value.toString()) {
-                //get transition and change the value shown
-                hasTwoPaths = true
-                val currentValue = transition.value.toString()
-                transition.value = currentValue + " / " + symbol
-                graph.refresh()
+            var hasTwoPaths: Boolean = false
+            for (transition in Transitions) {
+                if (transition.source.value.toString() == nodeOrigin.value.toString() && transition.target.value.toString() == nodeDestiny.value.toString()) {
+                    //get transition and change the value shown
+                    hasTwoPaths = true
+                    val currentValue = transition.value.toString()
+                    transition.value = currentValue + " / " + symbol
+                    graph.refresh()
+                }
             }
-        }
-        if ((!hasTwoPaths)) {
-            if (nodeOrigin.value.toString() == nodeDestiny.value.toString()) {
-                trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny) as mxCell
-            } else {
-                trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny, "edgeStyle=elbowEdgeStyle;elbow=horizontal;orthogonal=0.5;" + "entryX=0.5;entryY=0;entryPerimeter=1;rounded=true;arcsize=12") as mxCell
+            if ((!hasTwoPaths)) {
+                if (nodeOrigin.value.toString() == nodeDestiny.value.toString()) {
+                    trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny) as mxCell
+                } else {
+                    trans = graph.insertEdge(parent, null, symbol, nodeOrigin, nodeDestiny, "edgeStyle=elbowEdgeStyle;elbow=horizontal;orthogonal=0.5;" + "entryX=0.5;entryY=0;entryPerimeter=1;rounded=true;arcsize=12") as mxCell
+                }
+                Transitions.add(trans)
             }
-            Transitions.add(trans)
+            return true;
         }
-        return true
+        else{
+            return false;
+        }
     }
 
     fun RemoveTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {

@@ -1,7 +1,7 @@
 package AutomatonTheory.JavaLogic;
 
-public class FileManager {//implements IFileManager// {
-//
+public class FileManager {//implements IFileManager{
+
 //    String ln = System.lineSeparator();
 //    @Override
 //    public Automaton loadAutomaton(String automatonName) {

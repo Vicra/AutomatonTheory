@@ -3,12 +3,17 @@ package AutomatonTheory.Kotlin.Swing
 import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomaton
 import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
+import AutomatonTheory.Kotlin.FileControllerJava.FileManager
 import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonTheory.Kotlin.Swing.DialogBoxes.*
 import AutomatonTheory.Kotlin.Swing.FileChooser.FileChooser
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 import java.util.*
 import javax.swing.*
 
@@ -278,6 +283,7 @@ class MainWindow : JPanel(), ActionListener {
 
     companion object {
         internal var fileChooser:FileChooser = FileChooser()
+        internal var fileManager: FileManager = FileManager()
 
         private fun createAndShowGUI() {
             val frame = JFrame("SplitPaneDemo");
@@ -303,14 +309,52 @@ class MainWindow : JPanel(), ActionListener {
             var saveAutomatonItem = JMenuItem("Save Automaton")
             saveAutomatonItem.getAccessibleContext().setAccessibleDescription("Save Automaton")
             saveAutomatonItem.addActionListener(ActionListener{
-                fileChooser.SaveL()
+                var filename:String = ""
+                var dir:String = ""
+                val saveFileChooser = JFileChooser()
+                // Demonstrate "Open" dialog:
+                val rVal = saveFileChooser.showSaveDialog(frame)
+                if (rVal == JFileChooser.APPROVE_OPTION) {
+                    filename = saveFileChooser.getSelectedFile().getName()
+                    dir = saveFileChooser.getCurrentDirectory().toString()
+
+                    //
+                    val fileOut = FileOutputStream(dir + "/" +filename + ".ser")
+                    val out = ObjectOutputStream(fileOut)
+                    out.writeObject(mainWindow.iframe)
+                    out.close()
+                    fileOut.close()
+
+                    //*************
+                    val fileIn = FileInputStream(dir + "/" +filename + ".ser")
+                    val input = ObjectInputStream(fileIn)
+                    val e: AutomatonFrame = input.readObject() as AutomatonFrame
+                    input.close()
+                    fileIn.close()
+                    //
+                    println("dembow")
+                }
+                if (rVal == JFileChooser.CANCEL_OPTION) {
+                    filename = "You pressed cancel"
+                }
             })
             menu.add(saveAutomatonItem)
 
             var openAutomatonItem = JMenuItem("Open Automaton")
             openAutomatonItem.getAccessibleContext().setAccessibleDescription("Open Automaton")
             openAutomatonItem.addActionListener(ActionListener{
-                fileChooser.OpenL()
+                var filename:String = ""
+                var dir:String = ""
+                val openFileChooser = JFileChooser()
+                // Demonstrate "Open" dialog:
+                val rVal = openFileChooser.showOpenDialog(frame)
+                if (rVal == JFileChooser.APPROVE_OPTION) {
+                    filename = openFileChooser.getSelectedFile().getName()
+                    dir = openFileChooser.getCurrentDirectory().toString()
+                }
+                if (rVal == JFileChooser.CANCEL_OPTION) {
+                    filename = "You pressed cancel"
+                }
             })
             menu.add(openAutomatonItem)
 

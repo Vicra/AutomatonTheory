@@ -2,7 +2,7 @@ package AutomatonTheory.Kotlin.AutomatonLogic
 
 import java.util.*
 
-open class State {
+public open class State {
     open var Name: String = ""
     open var InitialState: Boolean = false
     open var AcceptanceState: Boolean = false

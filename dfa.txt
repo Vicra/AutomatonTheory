@@ -1,4 +1,4 @@
 Type:DFA
 Alphabet:0;1
-States:q0,true,false;q1,false,true
-Transitions:q0,q1,0;q1,q0,1
+States:q0,false,false;
+Transitions:
