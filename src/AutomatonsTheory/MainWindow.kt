@@ -1,13 +1,11 @@
-package AutomatonTheory.Kotlin.Swing
+package AutomatonsTheory
 
-import AutomatonTheory.Kotlin.AutomatonExtensions.DeterministicFiniteAutomaton
-import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteAutomaton
-import AutomatonTheory.Kotlin.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
-import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
-import AutomatonTheory.Kotlin.FileControllerJava.FileManager
-import AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents.AutomatonFrame
-import AutomatonTheory.Kotlin.Swing.DialogBoxes.*
-import AutomatonTheory.Kotlin.Swing.FileChooser.FileChooser
+import AutomatonsTheory.AutomatonExtensions.DeterministicFiniteAutomaton
+import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteAutomaton
+import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
+import AutomatonsTheory.AutomatonLogic.Automaton
+import AutomatonsTheory.Swing.AutomatonDrawerComponents.AutomatonFrame
+import AutomatonsTheory.Swing.DialogBoxes.*
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -220,7 +218,7 @@ class MainWindow : JPanel(), ActionListener {
             return
         }
         if (e.actionCommand == "toDFA") {
-            var dfa:DeterministicFiniteAutomaton = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            var dfa: DeterministicFiniteAutomaton = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
             //clean current
 
 
@@ -283,8 +281,6 @@ class MainWindow : JPanel(), ActionListener {
     }
 
     companion object {
-        internal var fileChooser:FileChooser = FileChooser()
-        internal var fileManager: FileManager = FileManager()
 
         private fun createAndShowGUI() {
             val frame = JFrame("SplitPaneDemo");
@@ -295,8 +291,8 @@ class MainWindow : JPanel(), ActionListener {
             frame.pack()
             frame.setVisible(true)
 
-            var menuBar:JMenuBar = JMenuBar()
-            var menu:JMenu = JMenu("menu")
+            var menuBar: JMenuBar = JMenuBar()
+            var menu: JMenu = JMenu("menu")
             menu.getAccessibleContext().setAccessibleDescription("Actions Menu")
             menuBar.add(menu)
 
@@ -367,7 +363,7 @@ class MainWindow : JPanel(), ActionListener {
         }
 
         @JvmStatic fun main(args: Array<String>) {
-            javax.swing.SwingUtilities.invokeLater { createAndShowGUI() }
+            SwingUtilities.invokeLater { createAndShowGUI() }
         }
     }
 }

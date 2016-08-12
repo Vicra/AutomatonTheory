@@ -1,4 +1,4 @@
-package AutomatonTheory.Kotlin.AutomatonLogic
+package AutomatonsTheory.AutomatonLogic
 
 import java.io.Serializable
 

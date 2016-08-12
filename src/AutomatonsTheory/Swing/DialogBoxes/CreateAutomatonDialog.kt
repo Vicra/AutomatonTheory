@@ -1,4 +1,4 @@
-package AutomatonTheory.Kotlin.Swing.DialogBoxes
+package AutomatonsTheory.Swing.DialogBoxes
 
 import java.util.*
 import javax.swing.*

@@ -1,8 +1,9 @@
-package AutomatonTheory.Kotlin.AutomatonExtensions
+package AutomatonsTheory.AutomatonExtensions
 
-import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
-import AutomatonTheory.Kotlin.AutomatonLogic.Automatons
-import AutomatonTheory.Kotlin.AutomatonLogic.Transition
+import AutomatonsTheory.AutomatonLogic.Automaton
+import AutomatonsTheory.AutomatonLogic.Automatons
+import AutomatonsTheory.AutomatonLogic.Transition
+
 
 open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
 

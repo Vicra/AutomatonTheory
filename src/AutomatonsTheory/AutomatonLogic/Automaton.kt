@@ -1,4 +1,4 @@
-package AutomatonTheory.Kotlin.AutomatonLogic
+package AutomatonsTheory.AutomatonLogic
 
 import java.io.Serializable
 import java.util.*
@@ -59,7 +59,7 @@ open abstract class Automaton : Serializable {
         return false
     }
 
-    fun getInitialState() : State{
+    fun getInitialState() : State {
         for (state in States) {
             if (state.InitialState) {
                 return state

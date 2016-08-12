@@ -1,7 +1,7 @@
-package AutomatonTheory.Kotlin.Swing.AutomatonDrawerComponents
+package AutomatonsTheory.Swing.AutomatonDrawerComponents
 
-import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
-import AutomatonTheory.Kotlin.AutomatonLogic.State
+import AutomatonsTheory.AutomatonLogic.Automaton
+import AutomatonsTheory.AutomatonLogic.State
 import com.mxgraph.model.mxCell
 import com.mxgraph.swing.handler.mxRubberband
 import com.mxgraph.swing.mxGraphComponent
@@ -13,7 +13,7 @@ import java.io.Serializable
 import java.util.*
 import javax.swing.JInternalFrame
 
-class AutomatonFrame(automaton:Automaton) : JInternalFrame("Automaton Grapher!") , Serializable {
+class AutomatonFrame(automaton: Automaton) : JInternalFrame("Automaton Grapher!") , Serializable {
 
     var automaton: Automaton = automaton
     var Nodes: MutableList<mxCell> = ArrayList()

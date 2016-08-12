@@ -1,11 +1,10 @@
-package AutomatonTheory.Kotlin.Swing.FileChooser
+package AutomatonsTheory.Swing.FileChooser
 
 import java.awt.BorderLayout
 import java.awt.GridLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.*
-
 
 class FileChooser : JFrame() {
     private val filename = JTextField()
@@ -70,7 +69,7 @@ class FileChooser : JFrame() {
         }
 
         fun run(frame: JFrame, width: Int, height: Int) {
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+            frame.setDefaultCloseOperation(EXIT_ON_CLOSE)
             frame.setSize(width, height)
             frame.setVisible(true)
         }

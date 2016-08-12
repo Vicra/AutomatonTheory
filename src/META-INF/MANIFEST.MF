@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Class-Path: Kotlin.AutomatonTheory.out.production.AutomatonTheory.Auto
  matonTheory.Kotlin.Swing.MainWindow
-Main-Class: AutomatonTheory.Kotlin.Swing.MainWindow
+Main-Class: AutomatonTheory.Swing.MainWindow
 

@@ -1,9 +1,9 @@
-package AutomatonTheory.Kotlin.AutomatonExtensions
+package AutomatonsTheory.AutomatonExtensions
 
-import AutomatonTheory.Kotlin.AutomatonLogic.Automaton
-import AutomatonTheory.Kotlin.AutomatonLogic.Automatons
-import AutomatonTheory.Kotlin.AutomatonLogic.State
-import AutomatonTheory.Kotlin.AutomatonLogic.Transition
+import AutomatonsTheory.AutomatonLogic.Automaton
+import AutomatonsTheory.AutomatonLogic.Automatons
+import AutomatonsTheory.AutomatonLogic.State
+import AutomatonsTheory.AutomatonLogic.Transition
 import java.util.*
 
 open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Automaton() {
@@ -29,7 +29,7 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
     override fun evaluateString(stringEvaluate:String):Boolean{
         return toNFA().evaluateString(stringEvaluate)
     }
-    open fun getClosure(state:State){
+    open fun getClosure(state: State){
         if(!evaluatedStates.contains(state.Name)){
             epsilonClosure.add( state )
             evaluatedStates.add( state.Name )
@@ -56,8 +56,8 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
         return reachableStates
     }
 
-    open fun toNFA():NonDeterministicFiniteAutomaton{
-        var nfa:NonDeterministicFiniteAutomaton = NonDeterministicFiniteAutomaton()
+    open fun toNFA(): NonDeterministicFiniteAutomaton {
+        var nfa: NonDeterministicFiniteAutomaton = NonDeterministicFiniteAutomaton()
         nfa.Alphabet = Alphabet
 
         for(thisStates in States) {

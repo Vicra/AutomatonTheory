@@ -1,8 +1,8 @@
-package AutomatonTheory.Kotlin.Swing.DialogBoxes
+package AutomatonsTheory.Swing.DialogBoxes
 
 import javax.swing.*
 
-class RemoveTransitionDialog(var States: Array<String>, var Alphabet: Array<String>) {
+class AddTransitionDialog(var States: Array<String>, var Alphabet: Array<String>) {
 
     var originState: String = ""
     var destinyState: String = ""
@@ -17,7 +17,7 @@ class RemoveTransitionDialog(var States: Array<String>, var Alphabet: Array<Stri
     fun displayGUI() {
         valor = JOptionPane.showConfirmDialog(null,
                 panel,
-                "Remove Transition",
+                "AddTransition",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE)
 
@@ -51,7 +51,7 @@ class RemoveTransitionDialog(var States: Array<String>, var Alphabet: Array<Stri
 
     companion object {
         @JvmStatic fun main(args: Array<String>) {
-            SwingUtilities.invokeLater { RemoveTransitionDialog(arrayOf("q0", "q1"), arrayOf("0", "1")).displayGUI() }
+            SwingUtilities.invokeLater { AddTransitionDialog(arrayOf("q0", "q1"), arrayOf("0", "1")).displayGUI() }
         }
     }
 
