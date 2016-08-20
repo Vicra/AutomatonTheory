@@ -90,6 +90,13 @@ class MainWindow : JPanel(), ActionListener {
         removeTransitionButton.addActionListener(this)
         leftBarOptions.add(removeTransitionButton)
 
+        val cleanAutomatonButton = JButton("Clean Automaton")
+        cleanAutomatonButton.setBounds(20, 260, buttonsWidth, buttonsHeight)
+        cleanAutomatonButton.isVisible = true
+        cleanAutomatonButton.actionCommand = "clean"
+        cleanAutomatonButton.addActionListener(this)
+        leftBarOptions.add(cleanAutomatonButton)
+
         if(iframe.automaton.Type.toString() == "NFA"){
             val convertDFAButton = JButton("Convert to DFA")
             convertDFAButton.setBounds(20, 600, buttonsWidth, buttonsHeight)
@@ -258,6 +265,9 @@ class MainWindow : JPanel(), ActionListener {
             //display
             println("vamo a calmarno")
         }
+        if (e.actionCommand == "clean"){
+            iframe.RemoveCellsFromGraph()
+        }
     }
 
     private fun AddTransitionToFrame() {
@@ -315,7 +325,6 @@ class MainWindow : JPanel(), ActionListener {
                     filename = saveFileChooser.getSelectedFile().getName()
                     dir = saveFileChooser.getCurrentDirectory().toString()
 
-                    //
                     val fileOut = FileOutputStream(dir + "/" +filename + ".ser")
                     val out = ObjectOutputStream(fileOut)
                     out.writeObject(mainWindow.iframe.automaton)
@@ -323,8 +332,6 @@ class MainWindow : JPanel(), ActionListener {
                     fileOut.close()
 
                     //*************
-
-                    //
                     println("dembow")
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
@@ -347,10 +354,11 @@ class MainWindow : JPanel(), ActionListener {
 
                     val fileIn = FileInputStream(dir + "/" +filename)
                     val input = ObjectInputStream(fileIn)
-                    val e: Automaton = input.readObject() as Automaton
+                    val loadedAutomaton: Automaton = input.readObject() as Automaton
                     input.close()
                     fileIn.close()
-
+                    mainWindow.iframe.automaton = loadedAutomaton
+                    drawLoadedAutomaton(loadedAutomaton, mainWindow.iframe);
                     println("dembow")
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
@@ -360,6 +368,10 @@ class MainWindow : JPanel(), ActionListener {
             menu.add(openAutomatonItem)
 
             frame.setJMenuBar(menuBar)
+        }
+
+        fun drawLoadedAutomaton(automaton:Automaton, frame : AutomatonFrame) : Unit {
+
         }
 
         @JvmStatic fun main(args: Array<String>) {

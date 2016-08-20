@@ -26,7 +26,6 @@ class AutomatonFrame(automaton: Automaton) : JInternalFrame("Automaton Grapher!"
 
 
     init {
-
         graph.model.beginUpdate()
         graph.model.endUpdate()
 
@@ -114,6 +113,11 @@ class AutomatonFrame(automaton: Automaton) : JInternalFrame("Automaton Grapher!"
             return true
         }
         return false
+    }
+
+    fun RemoveCellsFromGraph(){
+        graph.removeCells(Nodes.toTypedArray())
+        graph.removeCells(Transitions.toTypedArray())
     }
 
     fun AddTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
