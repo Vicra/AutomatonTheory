@@ -90,12 +90,22 @@ class MainWindow : JPanel(), ActionListener {
         removeTransitionButton.addActionListener(this)
         leftBarOptions.add(removeTransitionButton)
 
+        //left bar button
         val cleanAutomatonButton = JButton("Clean Automaton")
         cleanAutomatonButton.setBounds(20, 260, buttonsWidth, buttonsHeight)
         cleanAutomatonButton.isVisible = true
         cleanAutomatonButton.actionCommand = "clean"
         cleanAutomatonButton.addActionListener(this)
         leftBarOptions.add(cleanAutomatonButton)
+
+        //conver to regular expression button
+        val toRegularExpressionButton = JButton("Convert to REGEX")
+        toRegularExpressionButton.setBounds(20, 310, buttonsWidth, buttonsHeight)
+        toRegularExpressionButton.isVisible = true
+        toRegularExpressionButton.actionCommand = "toRegex"
+        toRegularExpressionButton.addActionListener(this)
+        leftBarOptions.add(toRegularExpressionButton)
+
 
         if(iframe.automaton.Type.toString() == "NFA"){
             val convertDFAButton = JButton("Convert to DFA")
@@ -240,26 +250,7 @@ class MainWindow : JPanel(), ActionListener {
             iframe.automaton = dfa
 
             //display states
-            for(state in dfa.States){
-                var rangeMinx:Double = 20.0
-                var rangeMaxx:Double = 900.0
-                val r = Random()
-                val randomValuex= rangeMinx + (rangeMaxx - rangeMinx) * r.nextDouble()
-
-                var rangeMiny:Double = 20.0
-                var rangeMaxy:Double = 600.0
-                val ry = Random()
-                val randomValuey= rangeMiny + (rangeMaxy - rangeMiny) * ry.nextDouble()
-
-                iframe.AddState(state.Name, state.InitialState, state.AcceptanceState, randomValuex, randomValuey)
-            }
-            iframe.graph.refresh()
-            for(state in dfa.States){
-                for(transition in state.Transitions){
-                    AddTransitionToFrame(state.Name, transition.DestinyState.Name, transition.Symbol)
-                }
-            }
-            iframe.graph.refresh()
+            redrawFrame(dfa,iframe)
 
 
             //display
@@ -267,6 +258,12 @@ class MainWindow : JPanel(), ActionListener {
         }
         if (e.actionCommand == "clean"){
             iframe.RemoveCellsFromGraph()
+            return
+        }
+        if (e.actionCommand == "toRegex"){
+            var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
+            var regularExpression:String = dfaAutomaton.toRegularExpression()
+            JOptionPane.showMessageDialog(iframe, regularExpression)
         }
     }
 
@@ -284,18 +281,15 @@ class MainWindow : JPanel(), ActionListener {
         }
     }
 
-    private fun AddTransitionToFrame(originStateName:String, destinyStateName:String, symbol:String) {
-        iframe.AddTransition(originStateName, destinyStateName, symbol)
-        actionsTextArea.append("Transition ADDED origin:" + originStateName + ", destiny: " + destinyStateName + ", symbol: " + symbol + "\n")
-        automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
-    }
+
 
     companion object {
+
 
         private fun createAndShowGUI() {
             val frame = JFrame("SplitPaneDemo");
             frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-            val mainWindow = MainWindow()
+            var mainWindow = MainWindow()
             frame.contentPane.add(mainWindow.splitPane)
             frame.extendedState = JFrame.MAXIMIZED_BOTH
             frame.pack()
@@ -357,9 +351,10 @@ class MainWindow : JPanel(), ActionListener {
                     val loadedAutomaton: Automaton = input.readObject() as Automaton
                     input.close()
                     fileIn.close()
-                    mainWindow.iframe.automaton = loadedAutomaton
+
+                    mainWindow.iframe.automaton.States.clear()
+                    //mainWindow.iframe.automaton = loadedAutomaton
                     drawLoadedAutomaton(loadedAutomaton, mainWindow.iframe);
-                    println("dembow")
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
                     filename = "You pressed cancel"
@@ -371,11 +366,39 @@ class MainWindow : JPanel(), ActionListener {
         }
 
         fun drawLoadedAutomaton(automaton:Automaton, frame : AutomatonFrame) : Unit {
-
+            frame.RemoveCellsFromGraph()
+            redrawFrame(automaton , frame)
         }
 
         @JvmStatic fun main(args: Array<String>) {
             SwingUtilities.invokeLater { createAndShowGUI() }
+        }
+
+        fun redrawFrame(dfa: Automaton, myFrame:AutomatonFrame) {
+            for (state in dfa.States) {
+                var rangeMinx: Double = 20.0
+                var rangeMaxx: Double = 900.0
+                val r = Random()
+                val randomValuex = rangeMinx + (rangeMaxx - rangeMinx) * r.nextDouble()
+
+                var rangeMiny: Double = 20.0
+                var rangeMaxy: Double = 550.0
+                val ry = Random()
+                val randomValuey = rangeMiny + (rangeMaxy - rangeMiny) * ry.nextDouble()
+
+                myFrame.AddState(state.Name, state.InitialState, state.AcceptanceState, randomValuex, randomValuey)
+            }
+            myFrame.graph.refresh()
+            for (state in dfa.States) {
+                for (transition in state.Transitions) {
+                    AddTransitionToFrame(state.Name, transition.DestinyState.Name, transition.Symbol, myFrame)
+                }
+            }
+            myFrame.graph.refresh()
+        }
+
+        private fun AddTransitionToFrame(originStateName:String, destinyStateName:String, symbol:String, myFrame:AutomatonFrame) {
+            myFrame.AddTransition(originStateName, destinyStateName, symbol)
         }
     }
 }
