@@ -264,6 +264,7 @@ class MainWindow : JPanel(), ActionListener {
             var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
             var regularExpression:String = dfaAutomaton.toRegularExpression()
             JOptionPane.showMessageDialog(iframe, regularExpression)
+            return
         }
     }
 

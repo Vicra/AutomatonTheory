@@ -102,18 +102,27 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
 
                     var transitionsToAdd:MutableList<Transition> = ArrayList<Transition>()
 
-                    for(transitionA in originState.Transitions){
-                        if(transitionA.DestinyState.Name == state.Name){ // si la transicion va hacia el estado a borrar
+                    for(transitionA in originState.Transitions) {
+                        if (transitionA.DestinyState.Name == state.Name) { // si la transicion va hacia el estado a borrar
 
-                            for(transitionB in state.Transitions){ // por cada transicion que sale del estado a borrar
+                            for (transitionB in state.Transitions) { // por cada transicion que sale del estado a borrar
                                 //originState.Transitions.add(Transition(transitionB.DestinyState, transitionB.Symbol + "," + transitionA.Symbol ))
-                                transitionsToAdd.add(Transition(transitionB.DestinyState, transitionB.Symbol + transitionA.Symbol ))
+
+                                var orState = originState.Name
+                                var desState = transitionB.DestinyState.Name
+
+                                if (orState == desState) {
+                                    var trans = Transition(transitionB.DestinyState, "(" + transitionA.Symbol + transitionB.Symbol + ")*")
+                                    transitionsToAdd.add(trans)
+                                } else {
+                                    transitionsToAdd.add(Transition(transitionB.DestinyState, transitionA.Symbol + transitionB.Symbol))
+                                }
                             }
                         }
                     }
-
                     for(newTransitions in transitionsToAdd){
                         originState.Transitions.add(newTransitions)
+                        regularExpression = newTransitions.Symbol
                     }
                 }
                 //parsedAutomaton.removeState(state.Name)
@@ -123,6 +132,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         for(state in statesToRemove){
             parsedAutomaton.removeState(state.Name)
         }
+
         println("fronen")
         return regularExpression
     }
