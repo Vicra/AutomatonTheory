@@ -212,17 +212,6 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
                 }
             }
         }
-        for (originIndex in this.States.indices) {
-            for (destinyIndex in this.States.indices) {
-                if (originIndex != destinyIndex && originIndex > destinyIndex) {
-                    if(elementos.get(originIndex, destinyIndex).Equivalente){
-                        var originState = getState(originIndex)
-                        var destinyState = getState(destinyIndex)
-                        this.States.add(State(originState.Name + "," + destinyState.Name ,originState.InitialState, originState.AcceptanceState))
-                    }
-                }
-            }
-        }
     }
 
     private fun equivalencia(originIndex: Int, destinyIndex: Int, elementos:Array2D<Elemento>) : Boolean{
@@ -256,14 +245,15 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
                 if(!validaciones.contains(false)){ // si son equivalentes entonces ... osea si existe equivalencia con todos los simbolos
                     elementos.get(originIndex, destinyIndex).Equivalente = true
                     var newState = State(originState.Name + "," + destinyState.Name ,originState.InitialState, originState.AcceptanceState)
-                    this.States.add(newState)
-                    for(trans in originState.Transitions){
+                    this.States.add(newState) // crea y agrega un nuevo estado
+                    for(trans in originState.Transitions){ // agrega las transiciones
                         newState.Transitions.add(Transition(getState(trans.DestinyState.Name),trans.Symbol))
                     }
+                    //remueve los estados que ya no se ocupan
                     return true
                 }
                 else{
-
+                    elementos.get(originIndex, destinyIndex).Equivalente = false
                 }
             }
         }
