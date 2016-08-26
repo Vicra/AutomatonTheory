@@ -202,4 +202,112 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         }
         return false
     }
+
+    fun minimize() : Unit {
+        var elementos: Array2D<Elemento> = Array2D<Elemento>(States.size, States.size) as Array2D<Elemento>
+        for (originIndex in this.States.indices) {
+            for (destinyIndex in this.States.indices) {
+                if (originIndex != destinyIndex && originIndex > destinyIndex) {
+                    equivalencia(originIndex, destinyIndex, elementos)
+                }
+            }
+        }
+        for (originIndex in this.States.indices) {
+            for (destinyIndex in this.States.indices) {
+                if (originIndex != destinyIndex && originIndex > destinyIndex) {
+                    if(elementos.get(originIndex, destinyIndex).Equivalente){
+                        var originState = getState(originIndex)
+                        var destinyState = getState(destinyIndex)
+                        this.States.add(State(originState.Name + "," + destinyState.Name ,originState.InitialState, originState.AcceptanceState))
+                    }
+                }
+            }
+        }
+    }
+
+    private fun equivalencia(originIndex: Int, destinyIndex: Int, elementos:Array2D<Elemento>) : Boolean{
+
+        if(elementos.get(originIndex, destinyIndex).Visitado == false){
+            elementos.get(originIndex, destinyIndex).Visitado = true
+            var originState = getState(originIndex)
+            var destinyState = getState(destinyIndex)
+
+            if(originState.AcceptanceState == destinyState.AcceptanceState){ // si ambos son de aceptacion o no
+
+                var validaciones:MutableList<Boolean> = ArrayList<Boolean>()
+                for (symbol in this.Alphabet) {
+                    var stateA = originState.getDestinyState(symbol)
+                    var stateB = destinyState.getDestinyState(symbol)
+
+                    if (!stateA.Name.equals(stateB.Name)) { // si los destinos no son  iguales se van en la recusion
+                        var stateAIndex = this.States.indexOf(stateA)
+                        var stateBIndex = this.States.indexOf(stateB)
+                        if(equivalencia(stateAIndex, stateBIndex, elementos)){
+                            validaciones.add(true)
+                        }
+                        else{
+                            validaciones.add(false)
+                        }
+                    }
+                    else{ // si todos los estados van al mismo estado con un simbolo
+                        validaciones.add(true)
+                    }
+                }
+                if(!validaciones.contains(false)){ // si son equivalentes entonces ... osea si existe equivalencia con todos los simbolos
+                    elementos.get(originIndex, destinyIndex).Equivalente = true
+                    var newState = State(originState.Name + "," + destinyState.Name ,originState.InitialState, originState.AcceptanceState)
+                    this.States.add(newState)
+                    for(trans in originState.Transitions){
+                        newState.Transitions.add(Transition(getState(trans.DestinyState.Name),trans.Symbol))
+                    }
+                    return true
+                }
+                else{
+
+                }
+            }
+        }
+        return false
+    }
+
+
+}
+
+class Array2D<T> (val xSize: Int, val ySize: Int, val array: Array<Array<T>>) {
+
+    companion object {
+
+        inline operator fun <reified T> invoke() = Array2D(0, 0, Array(0, { emptyArray<T>() }))
+
+        inline operator fun <reified T> invoke(xWidth: Int, yWidth: Int) =
+                Array2D(xWidth, yWidth, Array(xWidth, { arrayOfNulls<T>(yWidth) }))
+
+        inline operator fun <reified T> invoke(xWidth: Int, yWidth: Int, operator: (Int, Int) -> (T)): Array2D<T> {
+            val array = Array(xWidth, {
+                val x = it
+                Array(yWidth, {operator(x, it)})})
+            return Array2D(xWidth, yWidth, array)
+        }
+    }
+
+    operator fun get(x: Int, y: Int): T {
+        return array[x][y]
+    }
+
+    operator fun set(x: Int, y: Int, t: T) {
+        array[x][y] = t
+    }
+
+    inline fun forEach(operation: (T) -> Unit) {
+        array.forEach { it.forEach { operation.invoke(it) } }
+    }
+
+    inline fun forEachIndexed(operation: (x: Int, y: Int, T) -> Unit) {
+        array.forEachIndexed { x, p -> p.forEachIndexed { y, t -> operation.invoke(x, y, t) } }
+    }
+}
+
+class Elemento{
+    public var Equivalente:Boolean = false
+    public var Visitado:Boolean = false
 }

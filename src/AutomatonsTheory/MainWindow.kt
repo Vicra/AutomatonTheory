@@ -106,6 +106,14 @@ class MainWindow : JPanel(), ActionListener {
         toRegularExpressionButton.addActionListener(this)
         leftBarOptions.add(toRegularExpressionButton)
 
+        //minimize automatn
+        val minimizeAutomatonButton = JButton("Minimize")
+        minimizeAutomatonButton.setBounds(20, 360, buttonsWidth, buttonsHeight)
+        minimizeAutomatonButton.isVisible = true
+        minimizeAutomatonButton.actionCommand = "minimize"
+        minimizeAutomatonButton.addActionListener(this)
+        leftBarOptions.add(minimizeAutomatonButton)
+
 
         if(iframe.automaton.Type.toString() == "NFA"){
             val convertDFAButton = JButton("Convert to DFA")
@@ -264,6 +272,11 @@ class MainWindow : JPanel(), ActionListener {
             var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
             var regularExpression:String = dfaAutomaton.toRegularExpression()
             JOptionPane.showMessageDialog(iframe, regularExpression)
+            return
+        }
+        if (e.actionCommand == "minimize"){
+            var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
+            dfaAutomaton.minimize()
             return
         }
     }

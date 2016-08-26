@@ -53,4 +53,12 @@ public open class State : Serializable {
         }
         return false
     }
+
+    fun getDestinyState(symbol:String):State{
+        for(trans  in Transitions){
+            if(trans.Symbol.equals(symbol))
+                return trans.DestinyState
+        }
+        return State()
+    }
 }

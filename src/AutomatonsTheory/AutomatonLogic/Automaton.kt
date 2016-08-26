@@ -87,6 +87,10 @@ open abstract class Automaton : Serializable {
         }
         return State()
     }
+
+    fun getState(index:Int) : State{
+        return this.States.get(index)
+    }
     //endregion
 
     //region Transitions
