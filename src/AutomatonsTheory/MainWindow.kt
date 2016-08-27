@@ -4,6 +4,7 @@ import AutomatonsTheory.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteAutomaton
 import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
 import AutomatonsTheory.AutomatonLogic.Automaton
+import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonsTheory.Swing.DialogBoxes.*
 import java.awt.Dimension
@@ -115,7 +116,7 @@ class MainWindow : JPanel(), ActionListener {
         leftBarOptions.add(minimizeAutomatonButton)
 
 
-        if(iframe.automaton.Type.toString() == "NFA"){
+        if(iframe.automaton.Type.toString() != "DFA"){
             val convertDFAButton = JButton("Convert to DFA")
             convertDFAButton.setBounds(20, 600, buttonsWidth, buttonsHeight)
             convertDFAButton.isVisible = true
@@ -215,8 +216,6 @@ class MainWindow : JPanel(), ActionListener {
 
             if (dialog.valor == 0) {
                 if (iframe.SetInitialState(state)) {
-                    val node = iframe.getNode(state)
-                    //iframe.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#9FF781", new Object[]{node})
                     actionsTextArea.append("State: $state set as initial state \n")
                     automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
                 }
@@ -243,9 +242,14 @@ class MainWindow : JPanel(), ActionListener {
             return
         }
         if (e.actionCommand == "toDFA") {
-            var dfa: DeterministicFiniteAutomaton = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
-            //clean current
 
+            var dfa: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(iframe.automaton.AutomatonName)
+            if(iframe.automaton.Type == Automatons.NFA){
+                dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            }
+            else if(iframe.automaton.Type  == Automatons.NFAe){
+                dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
+            }
 
             for(state in iframe.Nodes){
                 val node = iframe.getNode(state.getValue().toString())
@@ -254,15 +258,10 @@ class MainWindow : JPanel(), ActionListener {
             iframe.Nodes.clear()
             iframe.Transitions.clear()
             iframe.graph.refresh()
-            //iframe = AutomatonFrame(dfa)
             iframe.automaton = dfa
 
             //display states
             redrawFrame(dfa,iframe)
-
-
-            //display
-            println("vamo a calmarno")
         }
         if (e.actionCommand == "clean"){
             iframe.CleanFrame()
@@ -316,16 +315,16 @@ class MainWindow : JPanel(), ActionListener {
 
             var createAutomatonItem = JMenuItem("Create Automaton")
             createAutomatonItem.getAccessibleContext().setAccessibleDescription("Create New Automaton")
-            createAutomatonItem.addActionListener(ActionListener {
+            createAutomatonItem.addActionListener({
                 println("create automaton")
             })
             menu.add(createAutomatonItem)
 
             var saveAutomatonItem = JMenuItem("Save Automaton")
             saveAutomatonItem.getAccessibleContext().setAccessibleDescription("Save Automaton")
-            saveAutomatonItem.addActionListener(ActionListener{
-                var filename:String = ""
-                var dir:String = ""
+            saveAutomatonItem.addActionListener({
+                var filename:String
+                var dir:String
                 val saveFileChooser = JFileChooser()
                 // Demonstrate "Open" dialog:
                 val rVal = saveFileChooser.showSaveDialog(frame)
@@ -339,17 +338,14 @@ class MainWindow : JPanel(), ActionListener {
                     out.close()
                     fileOut.close()
                 }
-                if (rVal == JFileChooser.CANCEL_OPTION) {
-                    filename = "You pressed cancel"
-                }
             })
             menu.add(saveAutomatonItem)
 
             var openAutomatonItem = JMenuItem("Open Automaton")
             openAutomatonItem.getAccessibleContext().setAccessibleDescription("Open Automaton")
-            openAutomatonItem.addActionListener(ActionListener{
-                var filename:String = ""
-                var dir:String = ""
+            openAutomatonItem.addActionListener({
+                var filename:String
+                var dir:String
                 val openFileChooser = JFileChooser()
                 // Demonstrate "Open" dialog:
                 val rVal = openFileChooser.showOpenDialog(frame)
@@ -384,8 +380,21 @@ class MainWindow : JPanel(), ActionListener {
             SwingUtilities.invokeLater { createAndShowGUI() }
         }
 
-        fun redrawFrame(dfa: Automaton, myFrame:AutomatonFrame) {
-            for (state in dfa.States) {
+        fun redrawFrame(automaton: Automaton, myFrame:AutomatonFrame) {
+            if(automaton.Type == Automatons.DFA){
+               myFrame.automaton = DeterministicFiniteAutomaton(automaton.AutomatonName)
+            }
+            else if(automaton.Type == Automatons.NFA){
+                myFrame.automaton = NonDeterministicFiniteAutomaton(automaton.AutomatonName)
+            }
+            else if (automaton.Type == Automatons.NFAe){
+                myFrame.automaton = NonDeterministicFiniteEpsilonAutomaton(automaton.AutomatonName)
+            }
+            myFrame.automaton.Alphabet.clear()
+            for(symbol in automaton.Alphabet){
+                myFrame.automaton.Alphabet.add(symbol)
+            }
+            for (state in automaton.States) {
                 var rangeMinx: Double = 20.0
                 var rangeMaxx: Double = 900.0
                 val r = Random()
@@ -399,7 +408,7 @@ class MainWindow : JPanel(), ActionListener {
                 myFrame.AddState(state.Name, state.InitialState, state.AcceptanceState, randomValuex, randomValuey)
             }
             myFrame.graph.refresh()
-            for (state in dfa.States) {
+            for (state in automaton.States) {
                 for (transition in state.Transitions) {
                     AddTransitionToFrame(state.Name, transition.DestinyState.Name, transition.Symbol, myFrame)
                 }

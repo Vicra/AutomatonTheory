@@ -71,13 +71,14 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
 
     fun toDeterministicFiniteAutomaton() : DeterministicFiniteAutomaton {
         var newDeterministicAutomaton: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
-        var currentState: State = State()
+        var currentState: State
 
         for(state in States){
             for(symbol in Alphabet){
                 currentState = getState(state.Name)
                 var destinyStates:MutableList<State> = currentState.getDestinyStates(symbol)
                 newDeterministicAutomaton.addState(State(currentState.Name,currentState.InitialState,currentState.AcceptanceState))
+
                 if(destinyStates.size > 0){
                     var newState: State = State()
                     var newStateName = ""
@@ -95,9 +96,7 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
                         if(destinyState.AcceptanceState){
                             newState.AcceptanceState = true
                         }
-
                     }
-
                     if(newStateName.isNotEmpty()){
                         newState.Name = newStateName
                         newDeterministicAutomaton.addState(State(currentState.Name, currentState.InitialState, currentState.AcceptanceState))
