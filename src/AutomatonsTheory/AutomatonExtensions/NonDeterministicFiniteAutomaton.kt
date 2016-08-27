@@ -29,7 +29,7 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
             val currentStatesFiltered = mutableListOf<State>()
             for (currState in currentStates)
             {
-                for (transition in (currState as State).Transitions) {
+                for (transition in currState.Transitions) {
                     if (character.toString() == transition.Symbol)
                         currentStatesFiltered.add(getState(transition.DestinyState.Name))
                 }

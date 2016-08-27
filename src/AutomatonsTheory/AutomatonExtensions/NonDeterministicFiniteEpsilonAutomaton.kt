@@ -34,7 +34,7 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
             epsilonClosure.add( state )
             evaluatedStates.add( state.Name )
             for(transition in state.Transitions){
-                if(transition.Symbol.equals('e')){
+                if(transition.Symbol.equals("e")){
                     var nextState = transition.DestinyState
                     getClosure( nextState )
                 }
@@ -81,6 +81,13 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
                 }
                 evaluatedStates.clear()
                 epsilonClosure.clear()
+            }
+            if(state.AcceptanceState){
+                for(nfaState in nfa.States){
+                    if(nfaState.Name.contains(state.Name)){
+                        nfaState.AcceptanceState = true
+                    }
+                }
             }
         }
         return nfa

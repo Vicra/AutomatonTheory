@@ -216,7 +216,7 @@ class MainWindow : JPanel(), ActionListener {
             if (dialog.valor == 0) {
                 if (iframe.SetInitialState(state)) {
                     val node = iframe.getNode(state)
-                    //iframe.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#9FF781", new Object[]{node});
+                    //iframe.graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, "#9FF781", new Object[]{node})
                     actionsTextArea.append("State: $state set as initial state \n")
                     automatonInfoTextArea.text = iframe.automaton.getAutomatonInfo()
                 }
@@ -265,7 +265,7 @@ class MainWindow : JPanel(), ActionListener {
             println("vamo a calmarno")
         }
         if (e.actionCommand == "clean"){
-            iframe.RemoveCellsFromGraph()
+            iframe.CleanFrame()
             return
         }
         if (e.actionCommand == "toRegex"){
@@ -301,7 +301,7 @@ class MainWindow : JPanel(), ActionListener {
 
 
         private fun createAndShowGUI() {
-            val frame = JFrame("SplitPaneDemo");
+            val frame = JFrame("SplitPaneDemo")
             frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
             var mainWindow = MainWindow()
             frame.contentPane.add(mainWindow.splitPane)
@@ -338,9 +338,6 @@ class MainWindow : JPanel(), ActionListener {
                     out.writeObject(mainWindow.iframe.automaton)
                     out.close()
                     fileOut.close()
-
-                    //*************
-                    println("dembow")
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
                     filename = "You pressed cancel"
@@ -367,11 +364,10 @@ class MainWindow : JPanel(), ActionListener {
                     fileIn.close()
 
                     mainWindow.iframe.automaton.States.clear()
-                    //mainWindow.iframe.automaton = loadedAutomaton
-                    drawLoadedAutomaton(loadedAutomaton, mainWindow.iframe);
+                    drawLoadedAutomaton(loadedAutomaton, mainWindow.iframe)
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
-                    filename = "You pressed cancel"
+                    println("You pressed cancel")
                 }
             })
             menu.add(openAutomatonItem)

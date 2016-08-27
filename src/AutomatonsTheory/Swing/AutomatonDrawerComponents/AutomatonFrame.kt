@@ -123,6 +123,14 @@ class AutomatonFrame(automaton: Automaton) : JInternalFrame("Automaton Grapher!"
         Transitions.clear()
     }
 
+    fun CleanFrame(){
+        automaton.States.clear()
+        graph.removeCells(Nodes.toTypedArray())
+        graph.removeCells(Transitions.toTypedArray())
+        Nodes.clear()
+        Transitions.clear()
+    }
+
     fun AddTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         if(automaton.addTransition(originStateName,destinyStateName,symbol)){
             val nodeOrigin = getNode(originStateName)
@@ -189,8 +197,7 @@ class AutomatonFrame(automaton: Automaton) : JInternalFrame("Automaton Grapher!"
     }
 
     fun EvaluateAutomaton(evaluationString :String) : Boolean{
-        println("llegue")
-        return automaton.evaluateString(evaluationString);
+        return automaton.evaluateString(evaluationString)
     }
 
     fun SetInitialState(stateName: String): Boolean {
