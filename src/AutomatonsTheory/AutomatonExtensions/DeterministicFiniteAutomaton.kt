@@ -212,6 +212,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
                 }
             }
         }
+        println("dembow")
     }
 
     private fun equivalencia(originIndex: Int, destinyIndex: Int, elementos:Array2D<Elemento>) : Boolean{

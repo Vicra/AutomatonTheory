@@ -23,19 +23,21 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
         val characters = stringEvaluate.toCharArray()
         var currentState = getInitialState()
         var currentStates = mutableListOf<State>()
-        if (currentState != null)
-            currentStates.add(currentState)
+        currentStates.add(currentState)
 
         for (character in characters) {
             val currentStatesFiltered = mutableListOf<State>()
             for (currState in currentStates)
             {
-                for (transition in currentState!!.Transitions) {
+                for (transition in (currState as State).Transitions) {
                     if (character.toString() == transition.Symbol)
                         currentStatesFiltered.add(getState(transition.DestinyState.Name))
                 }
             }
-            currentStates = currentStatesFiltered
+            currentStates.clear()
+            for(newCurrentState in currentStatesFiltered){
+                currentStates.add(newCurrentState)
+            }
         }
 
         for (state in currentStates)
