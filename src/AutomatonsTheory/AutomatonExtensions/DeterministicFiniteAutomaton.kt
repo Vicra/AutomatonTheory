@@ -260,8 +260,3 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         return false
     }
 }
-
-class Elemento{
-    public var Equivalente:Boolean = false
-    public var Visitado:Boolean = false
-}
