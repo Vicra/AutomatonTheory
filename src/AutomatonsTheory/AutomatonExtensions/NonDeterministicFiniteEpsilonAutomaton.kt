@@ -42,7 +42,7 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
         }
     }
 
-    open fun getReachableStates(closureStates:MutableList<State>, alphabetItem:Char):MutableList<State>{
+    open fun getReachableStates(closureStates:MutableList<State>, alphabetItem:String):MutableList<State>{
         var  reachableStates:MutableList<State> = mutableListOf()
         for(state in closureStates){
             for (transition in state.Transitions){
@@ -58,36 +58,32 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
 
     open fun toNFA(): NonDeterministicFiniteAutomaton {
         var nfa: NonDeterministicFiniteAutomaton = NonDeterministicFiniteAutomaton()
+        var acceptanceStates = mutableListOf<String>()
         nfa.Alphabet = Alphabet
 
         for(thisStates in States) {
             nfa.States.add(State(thisStates.Name,thisStates.InitialState,thisStates.AcceptanceState))
+            if(thisStates.AcceptanceState)
+                acceptanceStates.add(thisStates.Name)
         }
 
         for(state in States){
             for(symbol in Alphabet){
                 getClosure(state)
-                var reachableStates = getReachableStates(epsilonClosure, symbol[0])
+                var reachableStates = getReachableStates(epsilonClosure, symbol)
                 for(destinyState in reachableStates){
                     getClosure(destinyState)
                 }
                 for(currentState in epsilonClosure){
                     var stateToModify = nfa.getState(state.Name)
 
-                    if(currentState.AcceptanceState){
+                    if (acceptanceStates.contains(state.Name)) {
                         stateToModify.AcceptanceState = true
                     }
-                    stateToModify.addTransition(Transition(currentState,symbol))
+                    stateToModify.addTransition(Transition(currentState, symbol))
                 }
                 evaluatedStates.clear()
                 epsilonClosure.clear()
-            }
-            if(state.AcceptanceState){
-                for(nfaState in nfa.States){
-                    if(nfaState.Name.contains(state.Name)){
-                        nfaState.AcceptanceState = true
-                    }
-                }
             }
         }
         return nfa

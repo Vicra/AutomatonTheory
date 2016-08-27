@@ -39,7 +39,20 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
                 currentStates.add(newCurrentState)
             }
         }
-
+        if(stringEvaluate.isEmpty()){
+            val currentStatesFiltered = mutableListOf<State>()
+            for (currState in currentStates)
+            {
+                for (transition in currState.Transitions) {
+                    if ("e" == transition.Symbol)
+                        currentStatesFiltered.add(getState(transition.DestinyState.Name))
+                }
+            }
+            currentStates.clear()
+            for(newCurrentState in currentStatesFiltered){
+                currentStates.add(newCurrentState)
+            }
+        }
         for (state in currentStates)
         {
             if (state.AcceptanceState)
