@@ -116,14 +116,12 @@ class MainWindow : JPanel(), ActionListener {
         leftBarOptions.add(minimizeAutomatonButton)
 
 
-        if(iframe.automaton.Type.toString() != "DFA"){
-            val convertDFAButton = JButton("Convert to DFA")
-            convertDFAButton.setBounds(20, 600, buttonsWidth, buttonsHeight)
-            convertDFAButton.isVisible = true
-            convertDFAButton.actionCommand = "toDFA"
-            convertDFAButton.addActionListener(this)
-            leftBarOptions.add(convertDFAButton)
-        }
+        val convertDFAButton = JButton("Convert to DFA")
+        convertDFAButton.setBounds(20, 600, buttonsWidth, buttonsHeight)
+        convertDFAButton.isVisible = true
+        convertDFAButton.actionCommand = "toDFA"
+        convertDFAButton.addActionListener(this)
+        leftBarOptions.add(convertDFAButton)
 
 
         iframe.setVisible(true)
@@ -245,7 +243,7 @@ class MainWindow : JPanel(), ActionListener {
 
             var dfa: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(iframe.automaton.AutomatonName)
             if(iframe.automaton.Type == Automatons.NFA){
-                dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+                dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDFA()
             }
             else if(iframe.automaton.Type  == Automatons.NFAe){
                 dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()

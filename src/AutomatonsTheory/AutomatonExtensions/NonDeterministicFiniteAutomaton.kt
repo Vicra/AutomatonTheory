@@ -138,4 +138,117 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
         }
         return newDeterministicAutomaton
     }
+
+    fun toDFA(): DeterministicFiniteAutomaton{
+        var returnDFA = DeterministicFiniteAutomaton(this.AutomatonName)
+        returnDFA.Alphabet = this.Alphabet
+        var matrizPrincipal: Array2D<String> = Array2D<String>(States.size, Alphabet.size) as Array2D<String>
+
+        //llenar la matriz
+        for(stateIndex in States.indices){
+            for(symbolIndex in Alphabet.indices){
+                var state:State = getState(stateIndex)
+                var destinyStates = state.getDestinyStates(Alphabet.get(symbolIndex))
+                var destinyStatesName = getNewName(destinyStates)
+                matrizPrincipal.set(stateIndex, symbolIndex,destinyStatesName)
+            }
+        }
+
+        //copiar estados del nfa al dfa
+        for(state in States){
+            returnDFA.States.add(State(state.Name, state.InitialState, state.AcceptanceState))
+        }
+
+        //meter los nuevos estados al dfa
+        for(stateIndex in States.indices){
+            for(symbolIndex in Alphabet.indices){
+                var stateName:String = matrizPrincipal.get(stateIndex, symbolIndex)
+                var stateSplit = stateName.split(",")
+                if(stateName.isNotEmpty() && stateSplit.size > 1){
+                    returnDFA.States.add(State(stateName, false, false))
+                }
+            }
+        }
+
+        //estado incial
+        var initialState:State = getInitialState()
+        for(state in returnDFA.States){
+            if(state.Name.equals(initialState.Name)){
+                state.InitialState = true
+            }
+        }
+
+        //estados finales
+        for(state in States){
+            for(dfaState in returnDFA.States){
+                if(state.AcceptanceState && dfaState.Name.contains(state.Name)){
+                    dfaState.AcceptanceState = true
+                }
+            }
+        }
+
+        //meter transiciones copiar de matriz
+        for(stateIndex in States.indices){
+            for(symbolIndex in Alphabet.indices){
+                var currentState = returnDFA.getState(stateIndex)
+                var destinyStateName = matrizPrincipal.get(stateIndex, symbolIndex)
+                if(destinyStateName.isNotEmpty()){
+                    currentState.Transitions.add(Transition(returnDFA.getState(destinyStateName),returnDFA.Alphabet[symbolIndex]))
+                }
+            }
+        }
+
+        //faltan las transiciones de los nuevos estados
+        for(state in returnDFA.States){
+            if(state.Name.contains(",")){
+                var stateNames = state.Name.split(",")
+                for(symbol in returnDFA.Alphabet){
+
+                    var newDestinyName:String = ""
+                    for(stateName in stateNames){
+                        var myState:State = returnDFA.getState(stateName)
+                        var destinyState = myState.getDestinyState(symbol).Name.split(",")//esto puede ser una combinacion de estados ie: q0, q1
+
+                        for(dest in destinyState){
+                            if(!newDestinyName.contains(dest)){
+                                if(newDestinyName.isEmpty()){
+                                    newDestinyName += dest
+                                }
+                                else{
+                                    newDestinyName += "," + dest
+                                }
+                            }
+                        }
+                    }
+                    if(!returnDFA.existsState(newDestinyName)){
+                        returnDFA.States.add(State(newDestinyName, false, false))
+                    }
+                    if(newDestinyName.isNotEmpty()){
+                        state.Transitions.add(Transition(returnDFA.getState(newDestinyName),symbol))
+                    }
+                }
+            }
+        }
+
+        println("fronen")
+        return returnDFA
+    }
+
+    fun getNewName(destinyStates:MutableList<State>) : String{
+        var returnString:String = ""
+        if(destinyStates.size == 1){
+            returnString = destinyStates[0].Name
+        }
+        else{
+            for(destinyState in destinyStates){
+                if(returnString.isEmpty()){
+                    returnString += destinyState.Name
+                }
+                else{
+                    returnString += "," + destinyState.Name
+                }
+            }
+        }
+        return returnString
+    }
 }
