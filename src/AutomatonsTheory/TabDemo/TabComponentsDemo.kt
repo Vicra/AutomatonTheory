@@ -113,10 +113,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
             val loadedAutomaton: Automaton = input.readObject() as Automaton
             input.close()
             fileIn.close()
-
             newTabOpenAutomaton(loadedAutomaton)
-
-            //MainWindow.drawLoadedAutomaton(loadedAutomaton, mainWindow.iframe)
         }
     }
 
@@ -163,6 +160,11 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         val convertToDFAItem = JMenuItem("Convert to DFA")
         val minimizeItem = JMenuItem("Minimize")
 
+        val unionItem = JMenuItem("Union")
+        val interseccionItem = JMenuItem("Interseccion")
+        val complementoItem = JMenuItem("Complemento")
+        val restaItem = JMenuItem("Resta")
+
         //accelerators
         resetItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)
 
@@ -180,6 +182,11 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         convertToRegexItem.addActionListener { convertToRegex()}
         convertToDFAItem.addActionListener { convertToDFA()}
         minimizeItem.addActionListener { minimize()}
+
+        unionItem.addActionListener { union()}
+        interseccionItem.addActionListener { interseccion()}
+        complementoItem.addActionListener { complemento()}
+        restaItem.addActionListener { resta()}
 
         // add items
         val optionsMenu = JMenu("Automaton")
@@ -201,13 +208,64 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         convertsMenu.add(convertToDFAItem)
         convertsMenu.add(minimizeItem)
 
+        val combineMenu = JMenu("Combine")
+        combineMenu.add(unionItem)
+        combineMenu.add(interseccionItem)
+        combineMenu.add(complementoItem)
+        combineMenu.add(restaItem)
+
         menuBar.add(optionsMenu)
         menuBar.add(moreOptionsMenu)
         menuBar.add(convertsMenu)
+        menuBar.add(combineMenu)
         menuBar.add(this.field)
         menuBar.add(evaluateAutomatonButton)
 
         jMenuBar = menuBar
+    }
+
+    private fun resta() {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun complemento() {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun interseccion() {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    private fun union() {
+        var i = 0
+        var automatonList:MutableList<String> = mutableListOf()
+        while( i < pane.tabCount){
+            automatonList.add((pane.getComponentAt(i) as AutomatonFrame).automaton.AutomatonName)
+            i++
+        }
+        val dialog = CombineAutomatonsDialog(automatonList,"Union")
+        dialog.displayGUI()
+        if (dialog.valor == 0) {
+            var automatonAName = dialog.automatonA
+            var automatonBName = dialog.automatonB
+
+            var automatonA:DeterministicFiniteAutomaton = getTabAutomaton(automatonAName)
+            var automatonB:DeterministicFiniteAutomaton = getTabAutomaton(automatonBName)
+
+        }
+    }
+
+    private fun getTabAutomaton(automatonName:String):DeterministicFiniteAutomaton{
+        var i =0
+        var automatonList:MutableList<String> = mutableListOf()
+        while( i < pane.tabCount){
+            var currentAutomaton:Automaton =(pane.getComponentAt(i) as AutomatonFrame).automaton
+            if(currentAutomaton.AutomatonName.equals(automatonName)){
+                return currentAutomaton as DeterministicFiniteAutomaton
+            }
+            i++
+        }
+        return DeterministicFiniteAutomaton("")
     }
 
     private fun evaluate() {
