@@ -7,6 +7,7 @@ import AutomatonsTheory.AutomatonLogic.Automaton
 import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.Swing.AutomatonDrawerComponents.AutomatonFrame
 import AutomatonsTheory.Swing.DialogBoxes.*
+import AutomatonsTheory.TabDemo.TabComponentsDemo
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -21,6 +22,7 @@ class MainWindow : JPanel(), ActionListener {
     val splitPane: JSplitPane
 
     internal var iframe = AutomatonFrame(DeterministicFiniteAutomaton("dfa", mutableListOf("0","1")))
+    internal var tabs = TabComponentsDemo("My Automatons")
     internal var scrollPaneAutomatonLog: JScrollPane
     internal var scrollPaneAutomatonInfo: JScrollPane
     internal var actionsTextArea = JTextArea()
@@ -33,24 +35,7 @@ class MainWindow : JPanel(), ActionListener {
 
     init {
 
-        val dialog = CreateAutomatonDialog()
-        dialog.displayGUI()
-
-        if(dialog.valor == 0){
-            if(dialog.automatonType == "DFA"){
-                iframe = AutomatonFrame(DeterministicFiniteAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
-            }
-            if(dialog.automatonType == "NFA"){
-                iframe = AutomatonFrame(NonDeterministicFiniteAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
-            }
-            if(dialog.automatonType == "NFAe") {
-                iframe = AutomatonFrame(NonDeterministicFiniteEpsilonAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
-            }
-        }
-
         val leftBarOptions = JScrollPane()
-
-
         //add State Button
         val addStateButton = JButton("Add State")
         addStateButton.setBounds(20, 10, buttonsWidth, buttonsHeight)
@@ -125,6 +110,7 @@ class MainWindow : JPanel(), ActionListener {
 
 
         iframe.setVisible(true)
+        tabs.setVisible(true)
         val graphViewPane = JScrollPane(iframe)
 
         val downBarOptions = JScrollPane()
@@ -314,7 +300,20 @@ class MainWindow : JPanel(), ActionListener {
             var createAutomatonItem = JMenuItem("Create Automaton")
             createAutomatonItem.getAccessibleContext().setAccessibleDescription("Create New Automaton")
             createAutomatonItem.addActionListener({
-                println("create automaton")
+                val dialog = CreateAutomatonDialog()
+                dialog.displayGUI()
+
+                if(dialog.valor == 0){
+                    if(dialog.automatonType == "DFA"){
+                        mainWindow.iframe = AutomatonFrame(DeterministicFiniteAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
+                    }
+                    if(dialog.automatonType == "NFA"){
+                        mainWindow.iframe = AutomatonFrame(NonDeterministicFiniteAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
+                    }
+                    if(dialog.automatonType == "NFAe") {
+                        mainWindow.iframe = AutomatonFrame(NonDeterministicFiniteEpsilonAutomaton(dialog.automatonNameTextField.text, dialog.charactersList))
+                    }
+                }
             })
             menu.add(createAutomatonItem)
 

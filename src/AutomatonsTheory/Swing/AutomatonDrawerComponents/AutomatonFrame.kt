@@ -13,7 +13,7 @@ import java.io.Serializable
 import java.util.*
 import javax.swing.JInternalFrame
 
-class AutomatonFrame(automaton: Automaton) : JInternalFrame("Automaton Grapher!") , Serializable {
+class AutomatonFrame(automaton: Automaton) : JInternalFrame(automaton.AutomatonName) , Serializable {
 
     var automaton: Automaton = automaton
     var Nodes: MutableList<mxCell> = ArrayList()

@@ -199,7 +199,10 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
         }
 
         //faltan las transiciones de los nuevos estados
-        for(state in returnDFA.States){
+
+        var iterator = States.toList().listIterator()
+        while (iterator.hasNext()) {
+            val state = iterator.next()
             if(state.Name.contains(",")){
                 var stateNames = state.Name.split(",")
                 for(symbol in returnDFA.Alphabet){
@@ -229,6 +232,36 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
                 }
             }
         }
+//        for(state in returnDFA.States){
+//            if(state.Name.contains(",")){
+//                var stateNames = state.Name.split(",")
+//                for(symbol in returnDFA.Alphabet){
+//
+//                    var newDestinyName:String = ""
+//                    for(stateName in stateNames){
+//                        var myState:State = returnDFA.getState(stateName)
+//                        var destinyState = myState.getDestinyState(symbol).Name.split(",")//esto puede ser una combinacion de estados ie: q0, q1
+//
+//                        for(dest in destinyState){
+//                            if(!newDestinyName.contains(dest)){
+//                                if(newDestinyName.isEmpty()){
+//                                    newDestinyName += dest
+//                                }
+//                                else{
+//                                    newDestinyName += "," + dest
+//                                }
+//                            }
+//                        }
+//                    }
+//                    if(!returnDFA.existsState(newDestinyName)){
+//                        returnDFA.States.add(State(newDestinyName, false, false))
+//                    }
+//                    if(newDestinyName.isNotEmpty()){
+//                        state.Transitions.add(Transition(returnDFA.getState(newDestinyName),symbol))
+//                    }
+//                }
+//            }
+//        }
 
         println("fronen")
         return returnDFA
