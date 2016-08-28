@@ -165,4 +165,14 @@ open abstract class Automaton : Serializable {
     fun getAllAlphabet() : Array<String>{
         return Alphabet.toTypedArray()
     }
+
+    fun getAcceptanceStates():MutableList<State>{
+        var acceptanceStates:MutableList<State> = mutableListOf()
+        for(state in States){
+            if(state.AcceptanceState){
+                acceptanceStates.add(state)
+            }
+        }
+        return acceptanceStates
+    }
 }
