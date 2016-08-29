@@ -42,6 +42,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     override fun actionPerformed(e: ActionEvent){
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
+
         if (e.actionCommand == "evaluate"){
             val evalutaCadena = field.text
             if (iframe.EvaluateAutomaton(evalutaCadena)) {

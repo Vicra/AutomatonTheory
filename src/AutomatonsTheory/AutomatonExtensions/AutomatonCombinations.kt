@@ -123,6 +123,7 @@ open class AutomatonCombinations {
 
     fun Complemento(automaton:DeterministicFiniteAutomaton) : DeterministicFiniteAutomaton{
         var returnDFA:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton("")
+        returnDFA.AutomatonName = "Complemento: " +automaton.AutomatonName
         var transitionSymbols:MutableList<String> = mutableListOf()
         for(index in automaton.States.indices){
             var newState:State = State(automaton.getState(index).Name,!automaton.getState(index).InitialState, !automaton.getState(index).AcceptanceState)
