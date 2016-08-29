@@ -1,5 +1,6 @@
 package AutomatonsTheory.TabDemo
 
+import AutomatonsTheory.AutomatonExtensions.AutomatonCombinations
 import AutomatonsTheory.AutomatonExtensions.DeterministicFiniteAutomaton
 import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteAutomaton
 import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
@@ -225,7 +226,27 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     }
 
     private fun resta() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var i = 0
+        var automatonList:MutableList<String> = mutableListOf()
+
+        //mostrar todos las tabs abiertas en el dialog
+        while( i < pane.tabCount){
+            automatonList.add((pane.getComponentAt(i) as AutomatonFrame).automaton.AutomatonName)
+            i++
+        }
+        val dialog = CombineAutomatonsDialog(automatonList,"Resta")
+        dialog.displayGUI()
+        if (dialog.valor == 0) {
+            var automatonAName = dialog.automatonA
+            var automatonBName = dialog.automatonB
+
+            var automatonA:DeterministicFiniteAutomaton = getTabAutomaton(automatonAName)
+            var automatonB:DeterministicFiniteAutomaton = getTabAutomaton(automatonBName)
+
+            var automatonCombinations:AutomatonCombinations = AutomatonCombinations()
+            var unionAutomaton:DeterministicFiniteAutomaton = automatonCombinations.Resta(automatonA, automatonB)
+            newTabOpenAutomaton(unionAutomaton)
+        }
     }
 
     private fun complemento() {
@@ -233,12 +254,34 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     }
 
     private fun interseccion() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var i = 0
+        var automatonList:MutableList<String> = mutableListOf()
+
+        //mostrar todos las tabs abiertas en el dialog
+        while( i < pane.tabCount){
+            automatonList.add((pane.getComponentAt(i) as AutomatonFrame).automaton.AutomatonName)
+            i++
+        }
+        val dialog = CombineAutomatonsDialog(automatonList,"Intersection")
+        dialog.displayGUI()
+        if (dialog.valor == 0) {
+            var automatonAName = dialog.automatonA
+            var automatonBName = dialog.automatonB
+
+            var automatonA:DeterministicFiniteAutomaton = getTabAutomaton(automatonAName)
+            var automatonB:DeterministicFiniteAutomaton = getTabAutomaton(automatonBName)
+
+            var automatonCombinations:AutomatonCombinations = AutomatonCombinations()
+            var unionAutomaton:DeterministicFiniteAutomaton = automatonCombinations.Intersection(automatonA, automatonB)
+            newTabOpenAutomaton(unionAutomaton)
+        }
     }
 
     private fun union() {
         var i = 0
         var automatonList:MutableList<String> = mutableListOf()
+
+        //mostrar todos las tabs abiertas en el dialog
         while( i < pane.tabCount){
             automatonList.add((pane.getComponentAt(i) as AutomatonFrame).automaton.AutomatonName)
             i++
@@ -252,6 +295,9 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
             var automatonA:DeterministicFiniteAutomaton = getTabAutomaton(automatonAName)
             var automatonB:DeterministicFiniteAutomaton = getTabAutomaton(automatonBName)
 
+            var automatonCombinations:AutomatonCombinations = AutomatonCombinations()
+            var unionAutomaton:DeterministicFiniteAutomaton = automatonCombinations.Union(automatonA, automatonB) // union
+            newTabOpenAutomaton(unionAutomaton)
         }
     }
 

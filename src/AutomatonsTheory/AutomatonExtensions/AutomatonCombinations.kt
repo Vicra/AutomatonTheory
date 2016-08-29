@@ -1,34 +1,79 @@
 package AutomatonsTheory.AutomatonExtensions
 
 import AutomatonsTheory.AutomatonLogic.State
+import AutomatonsTheory.AutomatonLogic.Transition
 
 open class AutomatonCombinations {
 
     fun Union(automatonA:DeterministicFiniteAutomaton, automatonB:DeterministicFiniteAutomaton) : DeterministicFiniteAutomaton{
         var returnDFA:DeterministicFiniteAutomaton = merge(automatonA, automatonB)
-        //set initial State
-        var initialStateA:String = automatonA.getInitialState().Name
-        var initialStateB:String = automatonA.getInitialState().Name
-        for(state in returnDFA.States){
-            if(state.Name.equals(initialStateA+initialStateB)){
-                state.InitialState = true
+        returnDFA.AutomatonName = "Union: " + automatonA.AutomatonName + " " + automatonB.AutomatonName
+        for(stateA in automatonA.States){
+            for(stateB in automatonB.States){
+                if(stateA.InitialState && stateB.InitialState){
+                    for(newState in returnDFA.States){
+                        if(newState.Name.equals(stateA.Name + stateB.Name)){
+                            newState.InitialState = true
+                        }
+                    }
+                }
+                if(stateA.AcceptanceState || stateB.AcceptanceState){
+                    for(newState in returnDFA.States){
+                        if(newState.Name.equals(stateA.Name + stateB.Name)){
+                            newState.AcceptanceState = true
+                        }
+                    }
+                }
             }
         }
+        return returnDFA
+    }
 
-        //set acceptance States
-        var acceptanceStatesAutomatonA:MutableList<State> = mutableListOf()
-        var acceptanceStatesAutomatonB:MutableList<State> = mutableListOf()
-
-        acceptanceStatesAutomatonA = automatonA.getAcceptanceStates()
-        acceptanceStatesAutomatonB = automatonB.getAcceptanceStates()
-
-        for(state in returnDFA.States){
-            if(acceptanceStatesAutomatonA.contains(state) || acceptanceStatesAutomatonB.contains(state)){
-                state.AcceptanceState = true
+    fun Intersection(automatonA:DeterministicFiniteAutomaton, automatonB:DeterministicFiniteAutomaton) : DeterministicFiniteAutomaton{
+        var returnDFA:DeterministicFiniteAutomaton = merge(automatonA, automatonB)
+        returnDFA.AutomatonName = "Interseccion: " + automatonA.AutomatonName + " " + automatonB.AutomatonName
+        for(stateA in automatonA.States){
+            for(stateB in automatonB.States){
+                if(stateA.InitialState && stateB.InitialState){
+                    for(newState in returnDFA.States){
+                        if(newState.Name.equals(stateA.Name + stateB.Name)){
+                            newState.InitialState = true
+                        }
+                    }
+                }
+                if(stateA.AcceptanceState && stateB.AcceptanceState){
+                    for(newState in returnDFA.States){
+                        if(newState.Name.equals(stateA.Name + stateB.Name)){
+                            newState.AcceptanceState = true
+                        }
+                    }
+                }
             }
         }
-        println()
+        return returnDFA
+    }
 
+    fun Resta(automatonA:DeterministicFiniteAutomaton, automatonB:DeterministicFiniteAutomaton) : DeterministicFiniteAutomaton{
+        var returnDFA:DeterministicFiniteAutomaton = merge(automatonA, automatonB)
+        returnDFA.AutomatonName = "Resta: " + automatonA.AutomatonName + " " + automatonB.AutomatonName
+        for(stateA in automatonA.States){
+            for(stateB in automatonB.States){
+                if(stateA.InitialState && stateB.InitialState){
+                    for(newState in returnDFA.States){
+                        if(newState.Name.equals(stateA.Name + stateB.Name)){
+                            newState.InitialState = true
+                        }
+                    }
+                }
+                if(stateA.AcceptanceState && !stateB.AcceptanceState){
+                    for(newState in returnDFA.States){
+                        if(newState.Name.equals(stateA.Name + stateB.Name)){
+                            newState.AcceptanceState = true
+                        }
+                    }
+                }
+            }
+        }
         return returnDFA
     }
 
@@ -39,6 +84,82 @@ open class AutomatonCombinations {
                 returnDFA.States.add(State(stateA.Name + stateB.Name, false, false))
             }
         }
+        var transitionSymbols:MutableList<String> = mutableListOf()
+        for(stateA in automatonA.States){
+            for(transition in stateA.Transitions){
+                if(!transitionSymbols.contains(transition.Symbol)){
+                    transitionSymbols.add(transition.Symbol)
+                }
+            }
+        }
+        for(stateB in automatonB.States){
+            for(transition in stateB.Transitions){
+                if(!transitionSymbols.contains(transition.Symbol)){
+                    transitionSymbols.add(transition.Symbol)
+                }
+            }
+        }
+
+        for(stateA in automatonA.States){
+            for(stateB in automatonB.States){
+                for(symbol in transitionSymbols){
+                    val transition1 = getTransition(stateA, symbol)
+                    val transition2 = getTransition(stateB, symbol)
+                    val originStateName = stateA.Name + stateB.Name
+                    var destinyStateName = ""
+                    if(transition1!=null){
+                        destinyStateName += transition1.DestinyState.Name
+                    }
+                    if(transition2!=null){
+                        destinyStateName += transition2.DestinyState.Name
+                    }
+                    returnDFA.getState(originStateName).Transitions.add(Transition(returnDFA.getState(destinyStateName),symbol))
+                }
+            }
+        }
+
         return returnDFA
+    }
+
+    fun Complemento(automaton:DeterministicFiniteAutomaton) : DeterministicFiniteAutomaton{
+        var returnDFA:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton("")
+        var transitionSymbols:MutableList<String> = mutableListOf()
+        for(index in automaton.States.indices){
+            var newState:State = State(automaton.getState(index).Name,!automaton.getState(index).InitialState, automaton.getState(index).AcceptanceState)
+            returnDFA.addState(newState)
+
+        }
+        for(state in automaton.States){
+            for(transition in state.Transitions){
+                returnDFA.getState(state.Name).Transitions.add(Transition(returnDFA.getState(transition.DestinyState.Name),transition.Symbol))
+            }
+        }
+        for(state in automaton.States){
+            for(transition in state.Transitions){
+                if(!transitionSymbols.contains(transition.Symbol)){
+                    transitionSymbols.add(transition.Symbol)
+                }
+            }
+        }
+        for(dfaState in returnDFA.States){
+            for(symbol in transitionSymbols){
+                val transition = getTransition(dfaState, symbol)
+                if(transition == null){
+                    returnDFA.addState(State(dfaState.Name+symbol,false, false))
+
+
+                }
+            }
+        }
+        return returnDFA
+    }
+
+    fun getTransition(state:State, symbol:String): Transition? {
+        for(transition in state.Transitions){
+            if(transition.Symbol.equals(symbol)){
+                return transition
+            }
+        }
+        return null
     }
 }
