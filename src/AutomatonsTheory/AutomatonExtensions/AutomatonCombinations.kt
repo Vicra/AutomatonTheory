@@ -125,7 +125,7 @@ open class AutomatonCombinations {
         var returnDFA:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton("")
         var transitionSymbols:MutableList<String> = mutableListOf()
         for(index in automaton.States.indices){
-            var newState:State = State(automaton.getState(index).Name,!automaton.getState(index).InitialState, automaton.getState(index).AcceptanceState)
+            var newState:State = State(automaton.getState(index).Name,!automaton.getState(index).InitialState, !automaton.getState(index).AcceptanceState)
             returnDFA.addState(newState)
 
         }
@@ -145,9 +145,23 @@ open class AutomatonCombinations {
             for(symbol in transitionSymbols){
                 val transition = getTransition(dfaState, symbol)
                 if(transition == null){
-                    returnDFA.addState(State(dfaState.Name+symbol,false, false))
-
-
+                    var newState = State(dfaState.Name+symbol,false, false)
+                    returnDFA.addState(newState)
+                    newState.Transitions.add(Transition(returnDFA.getState(dfaState.Name+symbol),symbol))
+                    for(stateA in returnDFA.States){
+                        if(stateA.Name == (dfaState.Name+symbol)){
+                            stateA.AcceptanceState = true
+                        }
+                    }
+                }
+            }
+        }
+        var stateSink:State = State("qT", false, false)
+        returnDFA.addState(stateSink)
+        for(dfaState in returnDFA.States){
+            for(symbol in transitionSymbols){
+                if(getStatesBySymbol(returnDFA, dfaState, symbol) == null){
+                    dfaState.Transitions.add(Transition(returnDFA.getState(stateSink.Name),symbol))
                 }
             }
         }
@@ -159,6 +173,19 @@ open class AutomatonCombinations {
             if(transition.Symbol.equals(symbol)){
                 return transition
             }
+        }
+        return null
+    }
+
+    fun getStatesBySymbol(automaton:DeterministicFiniteAutomaton, state:State, symbol:String): MutableList<State>? {
+        var states:MutableList<State> = mutableListOf()
+        for(transition in state.Transitions){
+            if(transition.Symbol.equals(symbol)){
+                states.add(automaton.getState(transition.DestinyState.Name))
+            }
+        }
+        if(states.size>=1){
+            return states
         }
         return null
     }

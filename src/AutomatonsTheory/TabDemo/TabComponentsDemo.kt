@@ -250,7 +250,25 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     }
 
     private fun complemento() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var i = 0
+        var automatonList:MutableList<String> = mutableListOf()
+
+        //mostrar todos las tabs abiertas en el dialog
+        while( i < pane.tabCount){
+            automatonList.add((pane.getComponentAt(i) as AutomatonFrame).automaton.AutomatonName)
+            i++
+        }
+        val dialog = ComplementAutomatonDialog(automatonList)
+        dialog.displayGUI()
+        if (dialog.valor == 0) {
+            var automatonAName = dialog.automatonA
+
+            var automatonA:DeterministicFiniteAutomaton = getTabAutomaton(automatonAName)
+
+            var automatonCombinations:AutomatonCombinations = AutomatonCombinations()
+            var unionAutomaton:DeterministicFiniteAutomaton = automatonCombinations.Complemento(automatonA)
+            newTabOpenAutomaton(unionAutomaton)
+        }
     }
 
     private fun interseccion() {
