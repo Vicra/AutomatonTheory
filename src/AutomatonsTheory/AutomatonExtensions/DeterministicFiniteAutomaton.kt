@@ -203,15 +203,25 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         return false
     }
 
-    fun minimize() : Unit {
-        var elementos: Array2D<Elemento> = Array2D<Elemento>(States.size, States.size) as Array2D<Elemento>
+    fun minimize() : DeterministicFiniteAutomaton {
+        var returnDfa = DeterministicFiniteAutomaton(this.AutomatonName)
+        var matrizEquivalencia: Array2D<Elemento> = Array2D<Elemento>(States.size, States.size) as Array2D<Elemento>
+
+        // ciclo anidado para inicializar las posiciones
+        for (originIndex in this.States.indices) {
+            for (destinyIndex in this.States.indices) {
+                matrizEquivalencia.set(originIndex, destinyIndex,Elemento())
+            }
+        }
+
         for (originIndex in this.States.indices) {
             for (destinyIndex in this.States.indices) {
                 if (originIndex != destinyIndex && originIndex > destinyIndex) {
-                    equivalencia(originIndex, destinyIndex, elementos)
+                    equivalencia(originIndex, destinyIndex, matrizEquivalencia)
                 }
             }
         }
+        return returnDfa
     }
 
     private fun equivalencia(originIndex: Int, destinyIndex: Int, elementos:Array2D<Elemento>) : Boolean{
