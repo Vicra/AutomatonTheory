@@ -69,76 +69,6 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
         return originState.addTransition(Transition(destinyState, symbol))
     }
 
-    fun toDeterministicFiniteAutomaton() : DeterministicFiniteAutomaton {
-        var newDeterministicAutomaton: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
-        var currentState: State
-
-        for(state in States){
-            for(symbol in Alphabet){
-                currentState = getState(state.Name)
-                var destinyStates:MutableList<State> = currentState.getDestinyStates(symbol)
-                newDeterministicAutomaton.addState(State(currentState.Name,currentState.InitialState,currentState.AcceptanceState))
-
-                if(destinyStates.size > 0){
-                    var newState: State = State()
-                    var newStateName = ""
-
-                    //definir nombre nuevo estado
-                    for(destinyState in destinyStates){
-                        if(newStateName.isEmpty()){
-                            newStateName += destinyState.Name
-                        }
-                        else{
-                            if(!newStateName.contains(destinyState.Name)){
-                                newStateName += "," + destinyState.Name
-                            }
-                        }
-                        if(destinyState.AcceptanceState){
-                            newState.AcceptanceState = true
-                        }
-                    }
-                    if(newStateName.isNotEmpty()){
-                        newState.Name = newStateName
-                        newDeterministicAutomaton.addState(State(currentState.Name, currentState.InitialState, currentState.AcceptanceState))
-                        newDeterministicAutomaton.addState(newState)
-                        newDeterministicAutomaton.getState(currentState.Name).addTransition(Transition(newState, symbol))
-                    }
-                }
-            }
-        }
-        for(dfaState in newDeterministicAutomaton.States){
-            for(symbol in Alphabet) {
-                var newStateCompositionName = ""
-                var compositionStates = dfaState.Name.split(",")
-                if(compositionStates.size > 1){
-                    for (composition in compositionStates) {
-                        var destinyStates:MutableList<State> = getState(composition).getDestinyStates(symbol)
-                        var compositionStateName = ""
-                        for(destiny in destinyStates){
-                            if(compositionStateName.isEmpty()){
-                                compositionStateName = destiny.Name
-                            }
-                            else{
-                                compositionStateName += "," + destiny.Name
-                            }
-                        }
-                        if(newStateCompositionName.isEmpty()){
-                            newStateCompositionName += compositionStateName
-                        }
-                        else{
-                            if(compositionStateName.isNotEmpty()){
-                                newStateCompositionName += "," + compositionStateName
-                            }
-                        }
-                    }
-                    var newState: State = newDeterministicAutomaton.getState(newStateCompositionName)
-                    dfaState.addTransition(Transition(newState,symbol))
-                }
-            }
-        }
-        return newDeterministicAutomaton
-    }
-
     fun toDFA(): DeterministicFiniteAutomaton{
         var returnDFA = DeterministicFiniteAutomaton(this.AutomatonName)
         returnDFA.Alphabet = this.Alphabet
@@ -264,6 +194,26 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
 //        }
 
         println("fronen")
+        return returnDFA
+    }
+
+    fun toDeterministicFiniteAutomaton() : DeterministicFiniteAutomaton{
+        var returnDFA:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
+        var initialState: State? = null
+        var transitionSymbols:MutableList<String> = mutableListOf()
+
+        for(state in States){
+            if(state.InitialState){
+                initialState = State(state.Name, state.InitialState, state.AcceptanceState)
+            }
+            for(transition in state.Transitions){
+                if(!transitionSymbols.contains(transition.Symbol)){
+                    transitionSymbols.add(transition.Symbol)
+                }
+            }
+        }
+
+        var entryStates:MutableList<State> = mutableListOf()
         return returnDFA
     }
 

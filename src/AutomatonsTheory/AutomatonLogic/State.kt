@@ -3,7 +3,7 @@ package AutomatonsTheory.AutomatonLogic
 import java.io.Serializable
 import java.util.*
 
-public open class State : Serializable {
+open class State : Serializable {
     open var Name: String = ""
     open var InitialState: Boolean = false
     open var AcceptanceState: Boolean = false

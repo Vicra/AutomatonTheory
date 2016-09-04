@@ -375,7 +375,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     private fun convertToRegex() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
-        var regularExpression:String = dfaAutomaton.toRegularExpression()
+        var regularExpression:String = dfaAutomaton.toRegex()
         JOptionPane.showMessageDialog(iframe, regularExpression)
     }
 
