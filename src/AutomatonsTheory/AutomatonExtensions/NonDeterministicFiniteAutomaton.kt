@@ -213,7 +213,20 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
             }
         }
 
-        var entryStates:MutableList<State> = mutableListOf()
+        var entryStates:MutableList<MutableList<State>> = mutableListOf()
+        var exitStates:MutableList<MutableList<State>> = mutableListOf()
+        entryStates.add(mutableListOf())
+        var transitionForStates:MutableList<String> = mutableListOf()
+        transitionForStates.add("")
+        if(initialState==null){
+            exitStates.add(mutableListOf())
+        }else{
+            exitStates.add(mutableListOf())
+            exitStates[0].add(initialState)
+        }
+        var posibleStates:MutableList<State> = mutableListOf()
+        //posibleStates.add(exitStates.last())
+        var i=0
         return returnDFA
     }
 
