@@ -224,9 +224,76 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
             exitStates.add(mutableListOf())
             exitStates[0].add(initialState)
         }
-        var posibleStates:MutableList<State> = mutableListOf()
-        //posibleStates.add(exitStates.last())
+        var posibleStates:MutableList<MutableList<State>> = mutableListOf()
+        posibleStates.add(exitStates.last())
         var i=0
+        while(i < posibleStates.size){
+            for(symbol in transitionSymbols){
+                var statesUnion:MutableList<State> = mutableListOf()
+                for(posibleState in posibleStates[i]){
+                    for(transition in posibleState.Transitions){
+                        if(transition.Symbol.equals(symbol)){
+                            if(!statesUnion.contains(getState(transition.DestinyState.Name))){ // getState
+                                statesUnion.add(getState(transition.DestinyState.Name))
+                            }
+                        }
+                    }
+                }
+                entryStates.add(posibleStates[i])
+                exitStates.add(statesUnion)
+                transitionForStates.add(symbol)
+                var canAdd=true
+                for(x in posibleStates){
+                    var exists=false
+                    if(x.size!=statesUnion.size)
+                        exists=true
+                    else{
+                        for(n in x.indices){
+                            if(x[n].Name!=statesUnion[n].Name){
+                                exists=true
+                            }
+                        }
+                    }
+                    if(!exists)
+                        canAdd=false
+                }
+                if(canAdd){
+                    posibleStates.add(statesUnion)
+                }
+            }
+            i += 1
+        }
+
+        for(p in posibleStates){
+            var str=""
+            var fnal=false
+            for(elem in p){
+                str+=elem.Name
+                for(el in States){
+                    if(el.Name==str){
+                        if(el.AcceptanceState)
+                            fnal=true
+                    }
+                }
+                if(elem.AcceptanceState){
+                    fnal=true
+                }
+            }
+            var newState:State = State(str, false, fnal)
+            returnDFA.addState(newState)
+        }
+        for(i in exitStates.indices){
+            var originName=""
+            for(s in entryStates[i]){
+                originName+=s.Name
+            }
+            var destinyName=""
+            for(s in exitStates[i]){
+                destinyName+=s.Name
+            }
+            returnDFA.getState(originName).Transitions.add(Transition(returnDFA.getState(destinyName),transitionForStates[i]))
+        }
+        returnDFA.States[0].InitialState = true
         return returnDFA
     }
 

@@ -353,23 +353,13 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfa: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(iframe.automaton.AutomatonName)
         if(iframe.automaton.Type == Automatons.NFA){
-            dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDFA()
+            dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            newTabOpenAutomaton(dfa)
         }
         else if(iframe.automaton.Type  == Automatons.NFAe){
             dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
+            newTabOpenAutomaton(dfa)
         }
-
-        for(state in iframe.Nodes){
-            val node = iframe.getNode(state.getValue().toString())
-            iframe.graph.removeCells(arrayOf<Any>(node))
-        }
-        iframe.Nodes.clear()
-        iframe.Transitions.clear()
-        iframe.graph.refresh()
-        iframe.automaton = dfa
-
-        //display states
-        MainWindow.redrawFrame(dfa, iframe)
     }
 
     private fun convertToRegex() {
