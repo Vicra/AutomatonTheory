@@ -346,7 +346,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     private fun minimize() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
-        dfaAutomaton.minimize()
+        newTabOpenAutomaton(dfaAutomaton.minimize())
     }
 
     private fun convertToDFA() {
