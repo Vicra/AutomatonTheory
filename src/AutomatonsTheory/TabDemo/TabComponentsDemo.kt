@@ -399,13 +399,18 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private fun addTransition() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
-        val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),
-                iframe.automaton.getAllAlphabet())
-        dialog.displayGUI()
-        if (dialog.valor == 0) {
-            if (iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)) {
-            } else {
-                JOptionPane.showMessageDialog(this, "No se agrego la transicion")
+        if(iframe.automaton.Type == Automatons.PDA){
+
+        }
+        else{
+            val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),
+                    iframe.automaton.getAllAlphabet())
+            dialog.displayGUI()
+            if (dialog.valor == 0) {
+                if (iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)) {
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se agrego la transicion")
+                }
             }
         }
     }

@@ -232,7 +232,7 @@ class MainWindow : JPanel(), ActionListener {
                 dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDFA()
             }
             else if(iframe.automaton.Type  == Automatons.NFAe){
-                dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
+                dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDFA()
             }
 
             for(state in iframe.Nodes){
