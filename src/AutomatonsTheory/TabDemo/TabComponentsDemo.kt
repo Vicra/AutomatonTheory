@@ -1,9 +1,6 @@
 package AutomatonsTheory.TabDemo
 
-import AutomatonsTheory.AutomatonExtensions.AutomatonCombinations
-import AutomatonsTheory.AutomatonExtensions.DeterministicFiniteAutomaton
-import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteAutomaton
-import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
+import AutomatonsTheory.AutomatonExtensions.*
 import AutomatonsTheory.AutomatonLogic.Automaton
 import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.MainWindow
@@ -68,6 +65,9 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         }
         if(type == "NFAe") {
             newFrame = AutomatonFrame(NonDeterministicFiniteEpsilonAutomaton(name, alphabet))
+        }
+        if(type == "PDA") {
+            newFrame = AutomatonFrame(PushDownAutomaton(name, alphabet))
         }
         newFrame.setVisible(true)
 
@@ -400,7 +400,14 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     private fun addTransition() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         if(iframe.automaton.Type == Automatons.PDA){
-
+            val dialog = AddPushDownTransitionDialog(iframe.automaton.getStatesNames())
+            dialog.displayGUI()
+            if (dialog.valor == 0) {
+                if (iframe.AddTransition(dialog.originState, dialog.destinyState, dialog.symbol)) {
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se agrego la transicion")
+                }
+            }
         }
         else{
             val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),

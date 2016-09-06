@@ -17,6 +17,11 @@ open class PushDownAutomaton() : Automaton(){
         AutomatonName = automatonName
     }
 
+    constructor(automatonName: String, alphabet:MutableList<String>) : this(){
+        AutomatonName = automatonName
+        this.Alphabet = alphabet
+    }
+
     override fun evaluateString(stringEvaluate: String): Boolean {
         val initial = "Z"
         var transitionValues:MutableList<String> = mutableListOf()
@@ -92,7 +97,7 @@ open class PushDownAutomaton() : Automaton(){
     }
 
     override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return getState(originStateName).Transitions.add(Transition(getState(destinyStateName), symbol))
     }
 
     fun evaluate(strEvString:String):Boolean {

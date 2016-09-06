@@ -2,7 +2,7 @@ package AutomatonsTheory.Swing.DialogBoxes
 
 import javax.swing.*
 
-class AddPushDownTransitionDialog(var States: Array<String>, var Alphabet: Array<String>) {
+class AddPushDownTransitionDialog(var States: Array<String>) {
 
     var originState: String = ""
     var destinyState: String = ""
@@ -10,7 +10,7 @@ class AddPushDownTransitionDialog(var States: Array<String>, var Alphabet: Array
 
     var orginStateComboBox = JComboBox<String>()
     var detinyStateComboBox = JComboBox<String>()
-    var symbolComboBox = JComboBox<String>()
+    var symbolTextField = JTextField()
 
     var valor: Int = 0
 
@@ -23,7 +23,7 @@ class AddPushDownTransitionDialog(var States: Array<String>, var Alphabet: Array
 
         originState = orginStateComboBox.selectedItem.toString()
         destinyState = detinyStateComboBox.selectedItem.toString()
-        symbol = symbolComboBox.selectedItem.toString()
+        symbol = symbolTextField.text.toString()
 
     }
 
@@ -37,21 +37,21 @@ class AddPushDownTransitionDialog(var States: Array<String>, var Alphabet: Array
             val destinyLabel = JLabel("Choose Destiny: ")
             detinyStateComboBox = JComboBox(States)
             val symbolLabel = JLabel("Choose Symbol: ")
-            symbolComboBox = JComboBox(Alphabet)
+            symbolTextField = JTextField()
 
             panel.add(originLabel)
             panel.add(orginStateComboBox)
             panel.add(destinyLabel)
             panel.add(detinyStateComboBox)
             panel.add(symbolLabel)
-            panel.add(symbolComboBox)
+            panel.add(symbolTextField)
 
             return panel
         }
 
     companion object {
         @JvmStatic fun main(args: Array<String>) {
-            SwingUtilities.invokeLater { AddPushDownTransitionDialog(arrayOf("q0", "q1"), arrayOf("0", "1")).displayGUI() }
+            SwingUtilities.invokeLater { AddPushDownTransitionDialog(arrayOf("q0", "q1")).displayGUI() }
         }
     }
 
