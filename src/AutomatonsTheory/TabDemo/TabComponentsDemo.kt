@@ -357,7 +357,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
             newTabOpenAutomaton(dfa)
         }
         else if(iframe.automaton.Type  == Automatons.NFAe){
-            dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
+            dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDFA()
             newTabOpenAutomaton(dfa)
         }
     }
