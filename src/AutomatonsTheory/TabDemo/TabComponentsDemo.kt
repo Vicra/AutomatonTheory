@@ -353,7 +353,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfa: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(iframe.automaton.AutomatonName)
         if(iframe.automaton.Type == Automatons.NFA){
-            dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
+            dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDFA()
             newTabOpenAutomaton(dfa)
         }
         else if(iframe.automaton.Type  == Automatons.NFAe){

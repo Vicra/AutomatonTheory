@@ -130,70 +130,73 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
 
         //faltan las transiciones de los nuevos estados
 
-        var iterator = States.toList().listIterator()
-        while (iterator.hasNext()) {
-            val state = iterator.next()
-            if(state.Name.contains(",")){
-                var stateNames = state.Name.split(",")
-                for(symbol in returnDFA.Alphabet){
+        var currentSize:Int = returnDFA.States.size
+        var sizeChanged:Boolean = true
 
-                    var newDestinyName:String = ""
-                    for(stateName in stateNames){
-                        var myState:State = returnDFA.getState(stateName)
-                        var destinyState = myState.getDestinyState(symbol).Name.split(",")//esto puede ser una combinacion de estados ie: q0, q1
+        while(sizeChanged){
 
-                        for(dest in destinyState){
-                            if(!newDestinyName.contains(dest)){
-                                if(newDestinyName.isEmpty()){
-                                    newDestinyName += dest
-                                }
-                                else{
-                                    newDestinyName += "," + dest
+            for(state in returnDFA.States){
+                if(state.Name.contains(",")){
+                    var stateNames = state.Name.split(",")
+                    for(symbol in returnDFA.Alphabet){
+
+                        var newDestinyName:String = ""
+                        for(stateName in stateNames){
+                            var myState:State = returnDFA.getState(stateName)
+                            var destinyState = myState.getDestinyState(symbol).Name.split(",")//esto puede ser una combinacion de estados ie: q0, q1
+
+                            for(dest in destinyState){
+                                if(!newDestinyName.contains(dest)){
+                                    if(newDestinyName.isEmpty()){
+                                        newDestinyName += dest
+                                    }
+                                    else{
+                                        newDestinyName += "," + dest
+                                    }
                                 }
                             }
                         }
-                    }
-                    if(!returnDFA.existsState(newDestinyName)){
-                        returnDFA.States.add(State(newDestinyName, false, false))
-                    }
-                    if(newDestinyName.isNotEmpty()){
-                        state.Transitions.add(Transition(returnDFA.getState(newDestinyName),symbol))
+                        if(!returnDFA.existsState(newDestinyName)){
+                            returnDFA.addState(State(newDestinyName, false, false))
+                        }
+                        if(newDestinyName.isNotEmpty()){
+                            returnDFA.addTransition(state.Name, newDestinyName, symbol)
+                        }
                     }
                 }
             }
-        }
-//        for(state in returnDFA.States){
-//            if(state.Name.contains(",")){
-//                var stateNames = state.Name.split(",")
-//                for(symbol in returnDFA.Alphabet){
-//
-//                    var newDestinyName:String = ""
-//                    for(stateName in stateNames){
-//                        var myState:State = returnDFA.getState(stateName)
-//                        var destinyState = myState.getDestinyState(symbol).Name.split(",")//esto puede ser una combinacion de estados ie: q0, q1
-//
-//                        for(dest in destinyState){
-//                            if(!newDestinyName.contains(dest)){
-//                                if(newDestinyName.isEmpty()){
-//                                    newDestinyName += dest
-//                                }
-//                                else{
-//                                    newDestinyName += "," + dest
-//                                }
-//                            }
-//                        }
-//                    }
-//                    if(!returnDFA.existsState(newDestinyName)){
-//                        returnDFA.States.add(State(newDestinyName, false, false))
-//                    }
-//                    if(newDestinyName.isNotEmpty()){
-//                        state.Transitions.add(Transition(returnDFA.getState(newDestinyName),symbol))
-//                    }
-//                }
-//            }
-//        }
 
-        println("fronen")
+            var newSize = returnDFA.States.size
+            if(newSize > currentSize){
+                sizeChanged = true
+                currentSize = newSize
+            }
+            else if(newSize == currentSize){
+                sizeChanged = false
+            }
+        }
+        //remover lo estados basuras
+        var toRemoveStates:MutableList<State> = mutableListOf()
+        var removeStates:MutableList<State> = mutableListOf()
+        for(state in returnDFA.States){
+            if(state.Transitions.size == 0){
+                removeStates.add(state)
+            }
+        }
+        for(removeState in removeStates){
+            var hasAnyTransition:Boolean = false
+            for(originState in returnDFA.States){
+                for(transition in originState.Transitions){
+                    if(transition.DestinyState.Name.equals(removeState.Name)){
+                        hasAnyTransition = true
+                    }
+                }
+            }
+            if(!hasAnyTransition){
+                toRemoveStates.add(removeState)
+            }
+        }
+        returnDFA.States.removeAll(toRemoveStates)
         return returnDFA
     }
 
@@ -291,7 +294,7 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
             for(s in exitStates[i]){
                 destinyName+=s.Name
             }
-            returnDFA.getState(originName).Transitions.add(Transition(returnDFA.getState(destinyName),transitionForStates[i]))
+            returnDFA.addTransition(originName, destinyName, transitionForStates[i])
         }
         returnDFA.States[0].InitialState = true
         return returnDFA

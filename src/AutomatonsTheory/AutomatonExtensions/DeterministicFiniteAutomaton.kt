@@ -69,6 +69,9 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
     override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         val originState = getState(originStateName)
         val destinyState = getState(destinyStateName)
+        if(destinyState.Name.equals("")){
+            addState(State(destinyStateName, false, false))
+        }
 
         //validar que el origen y symbol no se pueden repetir
         var canAddTransition = true
@@ -76,7 +79,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName && transition.Symbol == symbol) {
                     canAddTransition = false
-                    return false;
+                    return false
                 }
             }
         }
