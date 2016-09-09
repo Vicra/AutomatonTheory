@@ -103,7 +103,7 @@ open class PushDownAutomaton() : Automaton(){
     fun evaluate(strEvString:String):Boolean {
         var strToEval = strEvString.toList()
         var currentState = getInitialState()
-        var strcpy = strEvString.toList()
+
         if (currentState != null) {
             for (character in strToEval) {
                 for (transition in currentState!!.Transitions) {
