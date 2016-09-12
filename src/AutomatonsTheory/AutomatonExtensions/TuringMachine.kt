@@ -16,9 +16,9 @@ class TuringMachine(automatonName:String) : DeterministicFiniteAutomaton(automat
         var cinta:String = "B" + stringEvaluate + "B"
         var pointer:Int = 1
         var currentState:State? = null
-        for(elem in States){
-            if (elem.InitialState) {
-                currentState = elem
+        for(state in States){
+            if (state.InitialState) {
+                currentState = state
             }
         }
         if(currentState != null) {
@@ -29,26 +29,26 @@ class TuringMachine(automatonName:String) : DeterministicFiniteAutomaton(automat
                 else if(pointer == -1){
                     pointer += 1
                 }
-                var tmpTrans: Transition? = null
-                for(trans in currentState.Transitions){
-                    if(trans.Symbol[0] == cinta[pointer]){
-                        tmpTrans = trans
+                var currentTransition: Transition? = null
+                for(transition in currentState.Transitions){
+                    if(transition.Symbol[0] == cinta[pointer]){
+                        currentTransition = transition
                     }
                 }
-                if(tmpTrans == null){
+                if(currentTransition == null){
                     return false
                 }
                 val stringbuilder = StringBuilder(cinta)
-                stringbuilder[pointer] = tmpTrans.Symbol[2]
+                stringbuilder[pointer] = currentTransition.Symbol[2]
                 cinta = stringbuilder.toString()
-                val direction = tmpTrans.Symbol[4].toString()
+                val direction = currentTransition.Symbol[4].toString()
                 if(direction == "L"){
                     pointer -= 1
                 }
                 else if(direction=="R") {
                     pointer += 1
                 }
-                currentState = getState(tmpTrans.DestinyState.Name)
+                currentState = getState(currentTransition.DestinyState.Name)
             }
         }
         return true
