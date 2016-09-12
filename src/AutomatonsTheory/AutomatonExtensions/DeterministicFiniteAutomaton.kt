@@ -152,8 +152,6 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         for(state in statesToRemove){
             parsedAutomaton.removeState(state.Name)
         }
-
-        println("fronen")
         return regularExpression
     }
 

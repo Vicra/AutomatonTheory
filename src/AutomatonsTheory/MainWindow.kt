@@ -360,7 +360,6 @@ class MainWindow : JPanel(), ActionListener {
                     drawLoadedAutomaton(loadedAutomaton, mainWindow.iframe)
                 }
                 if (rVal == JFileChooser.CANCEL_OPTION) {
-                    println("You pressed cancel")
                 }
             })
             menu.add(openAutomatonItem)

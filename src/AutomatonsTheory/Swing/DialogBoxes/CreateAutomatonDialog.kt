@@ -26,7 +26,6 @@ class CreateAutomatonDialog() {
                 charactersList.add(character)
             }
         }
-        println("alaffbeto")
     }
 
     private val panel: JPanel

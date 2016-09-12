@@ -70,7 +70,6 @@ class AutomatonFrame(automaton: Automaton) : JInternalFrame(automaton.AutomatonN
 
                         graphComponent.refresh()
                         if (toggleAcceptanceState(graph.getLabel(cell))) {
-                            println("es aceptado" + graph.getLabel(cell))
                         }
                     }
                 }

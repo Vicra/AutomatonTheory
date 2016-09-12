@@ -409,7 +409,6 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
                     JOptionPane.showMessageDialog(this, "No se agrego la transicion")
                 }
             }
-            println("hola salvaje")
         }
         else{
             val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),
