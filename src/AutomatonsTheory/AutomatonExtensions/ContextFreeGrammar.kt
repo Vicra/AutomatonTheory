@@ -2,7 +2,8 @@ package AutomatonsTheory.AutomatonExtensions
 
 import AutomatonsTheory.AutomatonLogic.State
 
-class ContextFreeGrammar {
+class ContextFreeGrammar(map:Map<String, String>) {
+    open var productions:Map<String, String> = map
 
     fun toPushDownAutomaton() : PushDownAutomaton{
         var returnPDA = PushDownAutomaton()
