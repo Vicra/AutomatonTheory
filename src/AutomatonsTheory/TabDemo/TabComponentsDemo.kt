@@ -69,6 +69,9 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         if(type == "PDA") {
             newFrame = AutomatonFrame(PushDownAutomaton(name, alphabet))
         }
+        if(type == "TuringMachine") {
+            newFrame = AutomatonFrame(TuringMachine(name, alphabet))
+        }
         newFrame.setVisible(true)
 
         pane.add(name + "(Type: " + type + ")", newFrame)
@@ -397,7 +400,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private fun addTransition() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
-        if(iframe.automaton.Type == Automatons.PDA){
+        if(iframe.automaton.Type == Automatons.PDA || iframe.automaton.Type == Automatons.TuringMachine){
             val dialog = AddPushDownTransitionDialog(iframe.automaton.getStatesNames())
             dialog.displayGUI()
             if (dialog.valor == 0) {
@@ -406,6 +409,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
                     JOptionPane.showMessageDialog(this, "No se agrego la transicion")
                 }
             }
+            println("hola salvaje")
         }
         else{
             val dialog = AddTransitionDialog(iframe.automaton.getStatesNames(),

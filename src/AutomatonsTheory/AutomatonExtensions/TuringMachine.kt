@@ -1,12 +1,17 @@
 package AutomatonsTheory.AutomatonExtensions
 
+import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.AutomatonLogic.State
 import AutomatonsTheory.AutomatonLogic.Transition
 
-class TuringMachine(automatonName:String) : DeterministicFiniteAutomaton(automatonName) {
+class TuringMachine(automatonName:String, alphabet:MutableList<String>) : DeterministicFiniteAutomaton(automatonName, alphabet) {
+
+    init{
+        this.Type = Automatons.TuringMachine
+    }
 
     override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return super.addTransition(originStateName, destinyStateName, symbol)
     }
 
     override fun evaluateString(stringEvaluate: String): Boolean {
@@ -23,32 +28,34 @@ class TuringMachine(automatonName:String) : DeterministicFiniteAutomaton(automat
         }
         if(currentState != null) {
             while(!currentState!!.AcceptanceState) {
-                if(pointer == cinta.length){
-                    pointer -= 1
-                }
-                else if(pointer == -1){
-                    pointer += 1
-                }
-                var currentTransition: Transition? = null
-                for(transition in currentState.Transitions){
-                    if(transition.Symbol[0] == cinta[pointer]){
-                        currentTransition = transition
+                if(currentState.Name.isNotEmpty()){
+                    if(pointer == cinta.length){
+                        pointer -= 1
                     }
+                    else if(pointer == -1){
+                        pointer += 1
+                    }
+                    var currentTransition: Transition? = null
+                    for(transition in currentState.Transitions){
+                        if(transition.Symbol[0] == cinta[pointer]){
+                            currentTransition = transition
+                        }
+                    }
+                    if(currentTransition == null){
+                        return false
+                    }
+                    val stringbuilder = StringBuilder(cinta)
+                    stringbuilder[pointer] = currentTransition.Symbol[2]
+                    cinta = stringbuilder.toString()
+                    val direction = currentTransition.Symbol[4].toString()
+                    if(direction == "L"){
+                        pointer -= 1
+                    }
+                    else if(direction=="R") {
+                        pointer += 1
+                    }
+                    currentState = getState(currentTransition.DestinyState.Name)
                 }
-                if(currentTransition == null){
-                    return false
-                }
-                val stringbuilder = StringBuilder(cinta)
-                stringbuilder[pointer] = currentTransition.Symbol[2]
-                cinta = stringbuilder.toString()
-                val direction = currentTransition.Symbol[4].toString()
-                if(direction == "L"){
-                    pointer -= 1
-                }
-                else if(direction=="R") {
-                    pointer += 1
-                }
-                currentState = getState(currentTransition.DestinyState.Name)
             }
         }
         return true
