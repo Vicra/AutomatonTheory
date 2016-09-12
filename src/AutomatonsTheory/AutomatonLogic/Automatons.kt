@@ -6,5 +6,6 @@ enum class Automatons : Serializable {
     DFA,
     NFA,
     NFAe,
-    PDA
+    PDA,
+    TuringMachine
 }

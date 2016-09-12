@@ -99,8 +99,6 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         MainWindow.redrawFrame(automaton, frame)
     }
 
-
-
     fun openAutomaton(parent: JFrame){
         var filename:String
         var dir:String
