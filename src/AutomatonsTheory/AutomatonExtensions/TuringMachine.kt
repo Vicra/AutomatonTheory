@@ -4,10 +4,19 @@ import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.AutomatonLogic.State
 import AutomatonsTheory.AutomatonLogic.Transition
 
-class TuringMachine(automatonName:String, alphabet:MutableList<String>) : DeterministicFiniteAutomaton(automatonName, alphabet) {
+class TuringMachine() : DeterministicFiniteAutomaton("") {
 
     init{
         this.Type = Automatons.TuringMachine
+    }
+
+    constructor(automatonName: String) : this(){
+        AutomatonName = automatonName
+    }
+
+    constructor(automatonName: String, alphabet:MutableList<String>) : this(){
+        AutomatonName = automatonName
+        this.Alphabet = alphabet
     }
 
     override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {

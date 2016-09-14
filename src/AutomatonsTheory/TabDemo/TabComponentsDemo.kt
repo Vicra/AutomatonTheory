@@ -352,13 +352,13 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private fun convertToDFA() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
-        var dfa: DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(iframe.automaton.AutomatonName)
+        var dfa: DeterministicFiniteAutomaton
         if(iframe.automaton.Type == Automatons.NFA){
             dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDFA()
             newTabOpenAutomaton(dfa)
         }
         else if(iframe.automaton.Type  == Automatons.NFAe){
-            dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDFA()
+            dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
             newTabOpenAutomaton(dfa)
         }
     }

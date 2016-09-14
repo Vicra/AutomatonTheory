@@ -63,8 +63,9 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
 
         for(thisStates in States) {
             nfa.States.add(State(thisStates.Name,thisStates.InitialState,thisStates.AcceptanceState))
-            if(thisStates.AcceptanceState)
+            if(thisStates.AcceptanceState) {
                 acceptanceStates.add(thisStates.Name)
+            }
         }
 
         for(state in States){

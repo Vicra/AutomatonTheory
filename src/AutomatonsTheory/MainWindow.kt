@@ -1,8 +1,6 @@
 package AutomatonsTheory
 
-import AutomatonsTheory.AutomatonExtensions.DeterministicFiniteAutomaton
-import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteAutomaton
-import AutomatonsTheory.AutomatonExtensions.NonDeterministicFiniteEpsilonAutomaton
+import AutomatonsTheory.AutomatonExtensions.*
 import AutomatonsTheory.AutomatonLogic.Automaton
 import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.Swing.AutomatonDrawerComponents.AutomatonFrame
@@ -386,6 +384,13 @@ class MainWindow : JPanel(), ActionListener {
             else if (automaton.Type == Automatons.NFAe){
                 myFrame.automaton = NonDeterministicFiniteEpsilonAutomaton(automaton.AutomatonName)
             }
+            else if (automaton.Type == Automatons.PDA){
+                myFrame.automaton = PushDownAutomaton(automaton.AutomatonName)
+            }
+            else if (automaton.Type == Automatons.TuringMachine){
+                myFrame.automaton = TuringMachine(automaton.AutomatonName)
+            }
+
             myFrame.automaton.Alphabet.clear()
             for(symbol in automaton.Alphabet){
                 myFrame.automaton.Alphabet.add(symbol)

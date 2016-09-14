@@ -79,14 +79,15 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
             for (transition in state.Transitions) {
                 if (state.Name == originStateName && transition.Symbol == symbol) {
                     canAddTransition = false
-                    return false
                 }
             }
         }
         if (canAddTransition) {
             return originState.addTransition(Transition(destinyState, symbol))
         }
-        return false
+        else{
+            return false
+        }
     }
 
     fun toRegularExpression():String{
