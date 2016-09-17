@@ -321,7 +321,6 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private fun getTabAutomaton(automatonName:String):DeterministicFiniteAutomaton{
         var i =0
-        var automatonList:MutableList<String> = mutableListOf()
         while( i < pane.tabCount){
             var currentAutomaton:Automaton =(pane.getComponentAt(i) as AutomatonFrame).automaton
             if(currentAutomaton.AutomatonName.equals(automatonName)){

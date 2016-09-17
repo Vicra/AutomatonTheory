@@ -18,8 +18,8 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         setAlphabet(alphabet)
     }
 
-    override fun evaluateString(evaluationString: String): Boolean {
-        val characters = evaluationString.toCharArray()
+    override fun evaluateString(stringEvaluate: String): Boolean {
+        val characters = stringEvaluate.toCharArray()
         var currentState = getInitialState()
 
         var trashState:State = State("", false, false)
@@ -405,141 +405,6 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
 
     fun toRegex():String{
         var returnRegex:String = ""
-
-        var automaton:DeterministicFiniteAutomaton = DeterministicFiniteAutomaton(this.AutomatonName)
-        for(state in this.States){
-            automaton.States.add(State(state.Name, state.InitialState, state.AcceptanceState))
-        }
-
-        for(state in this.States){
-            for(transition in state.Transitions){
-                automaton.getState(state.Name).Transitions.add(Transition(automaton.getState(transition.DestinyState.Name),transition.Symbol))
-            }
-        }
-        val automatonInitialState = automaton.getInitialState()
-        var myArray:Array2D<String> = Array2D<String>(automaton.States.size, automaton.States.size) as Array2D<String>
-
-        var i:Int = 0
-        var j:Int = 0
-        var k:Int = 0
-
-        //llenar la matriz de vacios
-        for(rowIndex in automaton.States.indices){
-            for(columnIndex in automaton.States.indices){
-                myArray.set(rowIndex, columnIndex, "")
-            }
-        }
-
-        for(stateA in automaton.States) {
-            val originState = stateA
-            val originStateTransitions = originState.Transitions
-            if (originStateTransitions.size > 0) {
-                j = 0
-                for (stateB in automaton.States) {
-                    k = 0
-                    val destinyState = stateB
-                    val destinyStateTransitions = destinyState.Transitions
-
-                    while(k < destinyStateTransitions.size){
-                        val transition = destinyStateTransitions[k]
-                        if(transition.DestinyState.Name.equals(destinyState.Name)){
-                            if(k == 0){
-                                if(myArray[i, j] == ""){
-                                    myArray[i,j] = transition.Symbol
-                                }
-                                else{
-                                    myArray[i,j] += transition.Symbol
-                                }
-                            }
-                            else{
-                                myArray[i, j] += "+" + transition.Symbol
-                            }
-                            if(originState.Name.equals(destinyState.Name)){
-                                myArray[i, j] = "*"
-                            }
-                        }
-                        k++
-                    }
-                    j++
-                }
-            }
-            i++
-        }
-        k = 0
-        while(k < automaton.States.size){
-            i = 0
-            for(stateA in automaton.States.indices){
-                j = 0
-                for(stateB in automaton.States.indices){
-                    val sourceToPivot = myArray[i, k]
-                    val pivotToDestiny = myArray[k, j]
-                    var appendingString:String = "(" + sourceToPivot + "." + pivotToDestiny + ")"
-
-                    if(sourceToPivot == "" || sourceToPivot == "")
-                    {
-
-                    }
-                    else
-                    {
-
-                        if(i == j)
-                        {
-                            appendingString +="*"
-                        }
-                        if(myArray[i,j] == "")
-                        {
-                            myArray[i,j] = appendingString
-                        }
-                        else
-                        {
-                            myArray[i,j] += "+" +  appendingString
-                        }
-
-                    }
-                    j++
-                }
-                i++
-            }
-            k++
-        }
-
-        var initialState = -1
-        val finalStateIndexes = mutableListOf<Int>()
-        for(stateA in automaton.getAcceptanceStates())
-        {
-            i = 0
-            for (state in automaton.States)
-            {
-                if(stateA.Name.equals(state.Name))
-                {
-                    finalStateIndexes.add(i)
-                }
-                i++
-            }
-        }
-
-        i= 0
-        for(state in automaton.States)
-        {
-            if(state.Name.equals(automatonInitialState.Name))
-            {
-                initialState = i
-            }
-            i++
-        }
-
-        for(finalStateIndex in finalStateIndexes)
-        {
-            if(returnRegex == "")
-            {
-                returnRegex = myArray[initialState, finalStateIndex]
-            }
-            else
-            {
-                returnRegex += "+" + myArray[initialState, finalStateIndex]
-            }
-        }
-
         return returnRegex
     }
 }
