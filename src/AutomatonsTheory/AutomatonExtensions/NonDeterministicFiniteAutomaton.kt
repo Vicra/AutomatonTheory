@@ -123,7 +123,9 @@ open class NonDeterministicFiniteAutomaton() : Automaton() {
                     nuevosVertex.add(State(nombreV,false,isAccept))
                 }
                 var state:State? = automata2.getState(vertexActual.Name)
-                state!!.Transitions.add(Transition(automata2.getState(nombreV), misNombres.elementAt(contador2).key.toString()))
+                if(misNombres.elementAt(contador2).key.toString() != "e"){
+                    state!!.Transitions.add(Transition(automata2.getState(nombreV), misNombres.elementAt(contador2).key.toString()))
+                }
                 contador2++
             }
             nuevosVertex.removeAt(0)
