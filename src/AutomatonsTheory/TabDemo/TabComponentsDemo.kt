@@ -16,9 +16,7 @@ import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import javax.swing.*
 
-/*
- * Creating and using TabComponentsDemo example
- */
+
 class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private val pane = JTabbedPane()
@@ -354,7 +352,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfa: DeterministicFiniteAutomaton
         if(iframe.automaton.Type == Automatons.NFA){
-            dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDFA()
+            dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
             newTabOpenAutomaton(dfa)
         }
         else if(iframe.automaton.Type  == Automatons.NFAe){
