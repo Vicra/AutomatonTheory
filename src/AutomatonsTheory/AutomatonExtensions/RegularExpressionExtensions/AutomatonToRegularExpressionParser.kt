@@ -8,8 +8,18 @@ import java.util.*
 class AutomatonToRegularExpressionParser(){
     private val EPSILON = "e"
 
-    fun ParseDFAToRegex(_states: ArrayList<State>):String{
-        val states = replaceStateForRegexState(_states)
+    fun ParseDFAToRegex(deterministicAutomatonStates: ArrayList<State>):String{
+
+        val states = ArrayList<RegexState>()
+        deterministicAutomatonStates.forEach {
+            val state = RegexState()
+            state.Name = it.Name
+            state.AcceptanceState = it.AcceptanceState
+            state.InitialState = it.InitialState
+            state.Transitions = it.Transitions
+            states.add(state)
+        }
+
         val initialState = states.filter { it.InitialState }
         if(initialState.isEmpty())
             return ""
@@ -60,19 +70,6 @@ class AutomatonToRegularExpressionParser(){
                 }
             }
         }
-    }
-
-    private fun replaceStateForRegexState(states: ArrayList<State>):ArrayList<RegexState>{
-        val _states = ArrayList<RegexState>()
-        states.forEach {
-            val state = RegexState()
-            state.Name = it.Name
-            state.AcceptanceState = it.AcceptanceState
-            state.InitialState = it.InitialState
-            state.Transitions = it.Transitions
-            _states.add(state)
-        }
-        return _states
     }
 
     private fun sortByLessTarget(states: ArrayList<RegexState>){
@@ -167,14 +164,14 @@ class AutomatonToRegularExpressionParser(){
             transition ->
             regex1 += "["
             regex1 += if (transition.DestinyState.Name.equals(finalState.Name)) "(" + transition.Symbol + ")*" else transition.Symbol
-            regex1 += "] U "
+            regex1 += "] . "
         }
         return regex1
     }
 
     private fun deleteTheLastUFromRegex(regex: String): String {
         var regex1 = regex
-        if (regex1.elementAt(regex1.length - 2).equals('U')) {
+        if (regex1.elementAt(regex1.length - 2).equals('.')) {
             regex1 = regex1.substring(0, (regex1.length - 2))
             val regexSp = regex1.split(EPSILON)
             regex1 = ""

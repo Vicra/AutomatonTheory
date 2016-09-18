@@ -1,6 +1,7 @@
 package AutomatonsTheory.TabDemo
 
 import AutomatonsTheory.AutomatonExtensions.*
+import AutomatonsTheory.AutomatonExtensions.RegularExpressionExtensions.AutomatonToRegularExpressionParser
 import AutomatonsTheory.AutomatonLogic.Automaton
 import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.MainWindow
@@ -14,6 +15,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import java.util.*
 import javax.swing.*
 
 
@@ -369,7 +371,9 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     private fun convertToRegex() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
-        var regularExpression:String = dfaAutomaton.toRegularExpression()
+        var regexParser = AutomatonToRegularExpressionParser()
+
+        var regularExpression:String = regexParser.ParseDFAToRegex(ArrayList(dfaAutomaton.States))
         JOptionPane.showMessageDialog(iframe, regularExpression)
     }
 
