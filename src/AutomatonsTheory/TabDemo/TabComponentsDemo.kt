@@ -168,6 +168,12 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
         //accelerators
         resetItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)
+        createAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK)
+        openAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK)
+        saveAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK)
+        addStateItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK)
+        addTransitionItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK)
+        setInitialStateItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK)
 
         //action listeners
         resetItem.addActionListener { runTest() }
@@ -363,7 +369,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     private fun convertToRegex() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
-        var regularExpression:String = dfaAutomaton.toRegex()
+        var regularExpression:String = dfaAutomaton.toRegularExpression()
         JOptionPane.showMessageDialog(iframe, regularExpression)
     }
 

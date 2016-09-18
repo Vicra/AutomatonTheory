@@ -61,4 +61,6 @@ open class State : Serializable {
         }
         return State()
     }
+
+    var targetCount: Int = 0
 }

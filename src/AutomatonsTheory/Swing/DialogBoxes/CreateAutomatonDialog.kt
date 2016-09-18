@@ -14,11 +14,13 @@ class CreateAutomatonDialog() {
     var automatonTypes = mutableListOf("DFA", "NFA", "NFAe", "PDA", "TuringMachine").toTypedArray()
 
     fun displayGUI() {
+
         valor = JOptionPane.showConfirmDialog(null,
                 panel,
                 "Create New Automaton",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE)
+
         automatonType = automatonTypesComboBox.selectedItem.toString()
         var splitedCharacters:List<String> = alphabetTextField.text.split(',')
         for(character in splitedCharacters){
@@ -50,7 +52,7 @@ class CreateAutomatonDialog() {
             panel.add(Box.createVerticalStrut(20))
             panel.add(alphabetLabel)
             panel.add(alphabetTextField)
-
+            automatonNameTextField.requestFocusInWindow()
             return panel
         }
 
