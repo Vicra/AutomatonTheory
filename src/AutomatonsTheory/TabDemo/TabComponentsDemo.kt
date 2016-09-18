@@ -1,7 +1,6 @@
 package AutomatonsTheory.TabDemo
 
 import AutomatonsTheory.AutomatonExtensions.*
-import AutomatonsTheory.AutomatonExtensions.RegularExpressionExtensions.AutomatonToRegularExpressionParser
 import AutomatonsTheory.AutomatonLogic.Automaton
 import AutomatonsTheory.AutomatonLogic.Automatons
 import AutomatonsTheory.MainWindow
@@ -15,7 +14,6 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
-import java.util.*
 import javax.swing.*
 
 
@@ -169,16 +167,17 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         val restaItem = JMenuItem("Resta")
 
         //accelerators
-        resetItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.ALT_MASK)
         createAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK)
         openAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK)
         saveAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK)
         addStateItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK)
         addTransitionItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_MASK)
         setInitialStateItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK)
+        convertToRegexItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK)
+        unionItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_U, InputEvent.CTRL_MASK)
+        complementoItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_C, InputEvent.CTRL_MASK)
 
         //action listeners
-        resetItem.addActionListener { runTest() }
         createAutomatonItem.addActionListener { createAutomaton() }
         openAutomatonItem.addActionListener { openAutomaton(this) }
         saveAutomatonItem.addActionListener { saveAutomaton(this)}
@@ -371,9 +370,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     private fun convertToRegex() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
-        var regexParser = AutomatonToRegularExpressionParser()
-
-        var regularExpression:String = regexParser.ParseDFAToRegex(ArrayList(dfaAutomaton.States))
+        var regularExpression:String = dfaAutomaton.toRegularExpression()
         JOptionPane.showMessageDialog(iframe, regularExpression)
     }
 

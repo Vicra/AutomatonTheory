@@ -8,6 +8,7 @@ open class State : Serializable {
     open var InitialState: Boolean = false
     open var AcceptanceState: Boolean = false
     open var Transitions: MutableList<Transition> = ArrayList()
+    open var level: Int = 0
 
     constructor() {
 
@@ -61,6 +62,4 @@ open class State : Serializable {
         }
         return State()
     }
-
-    var targetCount: Int = 0
 }
