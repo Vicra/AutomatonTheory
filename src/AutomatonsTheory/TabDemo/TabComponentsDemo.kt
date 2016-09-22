@@ -130,7 +130,8 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
             val fileOut = FileOutputStream(dir + "/" +filename + ".ser")
             val out = ObjectOutputStream(fileOut)
-            out.writeObject((pane.getComponentAt(pane.selectedIndex) as AutomatonFrame).automaton)
+            val toSaveAutomaton = (pane.getComponentAt(pane.selectedIndex) as AutomatonFrame).automaton
+            out.writeObject(toSaveAutomaton)
             out.close()
             fileOut.close()
         }

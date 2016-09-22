@@ -23,8 +23,8 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         val characters = stringEvaluate.toCharArray()
         var currentState = getInitialState()
 
-        var trashState:State = State("", false, false)
-        States.add(trashState)
+        //var trashState:State = State("", false, false)
+        //States.add(trashState)
 
         for(state in States){
             for(symbol in Alphabet) {
@@ -70,9 +70,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
     override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
         val originState = getState(originStateName)
         val destinyState = getState(destinyStateName)
-        if(destinyState.Name.equals("")){
-            addState(State(destinyStateName, false, false))
-        }
+
 
         //validar que el origen y symbol no se pueden repetir
         var canAddTransition = true
@@ -95,6 +93,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
         var returnDfa = DeterministicFiniteAutomaton(this.AutomatonName)
         var states:MutableList<State> = mutableListOf()
         var acceptanceStates:MutableList<State> = mutableListOf()
+        returnDfa.Alphabet = this.Alphabet
 
         for (state in States) {
             if (state.AcceptanceState){
@@ -174,8 +173,10 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
                     initialState = true
                 }
             }
-            var newState:State = State(stateName, initialState, acceptedState)
-            returnDfa.addState(newState)
+            if(stateName!=""){
+                var newState:State = State(stateName, initialState, acceptedState)
+                returnDfa.addState(newState)
+            }
         }
 
         for (index in equivalentStates.indices) {
