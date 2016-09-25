@@ -46,7 +46,7 @@ open class DeterministicFiniteAutomaton(automatonName: String) : Automaton() {
                     var hasTransition = false
                     for (item in currentState.Transitions) {
 
-                        if (item.Symbol == "" + character) {
+                        if (item.Symbol == "" + character && item.DestinyState.Name != "") {
                             currentState = item.DestinyState
                             hasTransition = true
                         }
