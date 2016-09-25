@@ -194,15 +194,6 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
         return false
     }
 
-    open fun containsVertex(automata:DeterministicFiniteAutomaton,vertex:State):Boolean{
-        for(vertice in automata.States){
-            if(vertice.Name == vertex.Name){
-                return true
-            }
-        }
-        return false
-    }
-
     open fun getSalida(valor:String, estado:State):String{
         var lista = mutableListOf<String>()
         var strSplit = estado.Name.split(",")
