@@ -367,16 +367,6 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         return DeterministicFiniteAutomaton("")
     }
 
-    private fun evaluate() {
-        var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
-        val evalutaCadena = field.text
-        if (iframe.EvaluateAutomaton(evalutaCadena)) {
-            JOptionPane.showMessageDialog(iframe, "Cadena paso")
-        } else {
-            JOptionPane.showMessageDialog(iframe, "La Cadena no paso", "Error", JOptionPane.ERROR_MESSAGE)
-        }
-    }
-
     private fun minimize() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
         var dfaAutomaton = iframe.automaton as DeterministicFiniteAutomaton
@@ -476,10 +466,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
     companion object {
 
         @JvmStatic fun main(args: Array<String>) {
-            //Schedule a job for the event dispatch thread:
-            //creating and showing this application's GUI.
             SwingUtilities.invokeLater {
-                //Turn off metal's use of bold fonts
                 UIManager.put("swing.boldMetal", java.lang.Boolean.FALSE)
                 val frame = TabComponentsDemo("TabComponentsDemo")
                 frame.extendedState = JFrame.MAXIMIZED_BOTH
@@ -487,7 +474,6 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
                 frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
                 frame.setVisible(true)
                 frame.runTest()
-
             }
         }
     }

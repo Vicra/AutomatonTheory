@@ -28,19 +28,7 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
     }
 
     override fun evaluateString(stringEvaluate:String):Boolean{
-        return toNFA().evaluateString(stringEvaluate)
-    }
-    open fun getClosure(state: State){
-        if(!evaluatedStates.contains(state.Name)){
-            epsilonClosure.add( state )
-            evaluatedStates.add( state.Name )
-            for(transition in state.Transitions){
-                if(transition.Symbol.equals("e")){
-                    var nextState = transition.DestinyState
-                    getClosure( nextState )
-                }
-            }
-        }
+        return toDeterministicFiniteAutomaton().evaluateString(stringEvaluate)
     }
 
     open fun getReachableStates(closureStates:MutableList<State>, alphabetItem:String):MutableList<State>{
@@ -55,40 +43,6 @@ open class NonDeterministicFiniteEpsilonAutomaton (automatonName:String) : Autom
         closureStates.clear()
         evaluatedStates.clear()
         return reachableStates
-    }
-
-    open fun toNFA(): NonDeterministicFiniteAutomaton {
-        var nfa: NonDeterministicFiniteAutomaton = NonDeterministicFiniteAutomaton()
-        var acceptanceStates = mutableListOf<String>()
-        nfa.Alphabet = Alphabet
-
-        for(thisStates in States) {
-            nfa.States.add(State(thisStates.Name,thisStates.InitialState,thisStates.AcceptanceState))
-            if(thisStates.AcceptanceState) {
-                acceptanceStates.add(thisStates.Name)
-            }
-        }
-
-        for(state in States){
-            for(symbol in Alphabet){
-                getClosure(state)
-                var reachableStates = getReachableStates(epsilonClosure, symbol)
-                for(destinyState in reachableStates){
-                    getClosure(destinyState)
-                }
-                for(currentState in epsilonClosure){
-                    var stateToModify = nfa.getState(state.Name)
-
-                    if (acceptanceStates.contains(state.Name)) {
-                        stateToModify.AcceptanceState = true
-                    }
-                    stateToModify.addTransition(Transition(currentState, symbol))
-                }
-                evaluatedStates.clear()
-                epsilonClosure.clear()
-            }
-        }
-        return nfa
     }
 
     open fun getAcceptanceState() : State?{
