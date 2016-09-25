@@ -423,7 +423,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private fun addTransition() {
         var iframe = (pane.getComponentAt(pane.selectedIndex)as AutomatonFrame)
-        if(iframe.automaton.Type == Automatons.PDA || iframe.automaton.Type == Automatons.TuringMachine){
+        if(iframe.automaton.Type == Automatons.TuringMachine || iframe.automaton.Type == Automatons.PDA){
             val dialog = AddPushDownTransitionDialog(iframe.automaton.getStatesNames())
             dialog.displayGUI()
             if (dialog.valor == 0) {

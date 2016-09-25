@@ -175,4 +175,13 @@ open abstract class Automaton : Serializable {
         }
         return acceptanceStates
     }
+
+    fun getInitial():State?{
+        for(state in States){
+            if(state.InitialState){
+                return state
+            }
+        }
+        return null
+    }
 }

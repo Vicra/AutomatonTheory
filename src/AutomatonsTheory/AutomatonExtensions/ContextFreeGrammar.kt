@@ -19,7 +19,6 @@ class ContextFreeGrammar(map:Map<String, String>) {
         returnPDA.addTransition("q0", "q1", "e,Zo/eZo")
         returnPDA.addTransition("q1", "q2", "e,Zo/Zo")
 
-        returnPDA.stack.push("Zo")
         return returnPDA
     }
 

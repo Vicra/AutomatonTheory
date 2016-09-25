@@ -7,8 +7,8 @@ open class Stack {
         list.add(element)
     }
 
-    fun pop(){
-        list.removeAt(list.size - 1)
+    fun pop():String{
+        return list.removeAt(list.size - 1)
     }
 
     fun peek():String{
