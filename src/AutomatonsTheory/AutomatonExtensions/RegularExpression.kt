@@ -1,55 +1,107 @@
 package AutomatonsTheory.AutomatonExtensions
 
 import AutomatonsTheory.AutomatonExtensions.RegularExpressionParserDirectory.RegularExpressionParser
-import AutomatonsTheory.AutomatonExtensions.RegularExpressionParserDirectory.tree.CharNode
-import AutomatonsTheory.AutomatonExtensions.RegularExpressionParserDirectory.tree.Node
-import AutomatonsTheory.AutomatonLogic.Automaton
-import AutomatonsTheory.AutomatonLogic.Automatons
+import AutomatonsTheory.AutomatonExtensions.RegularExpressionParserDirectory.tree.*
 import AutomatonsTheory.AutomatonLogic.State
+import AutomatonsTheory.AutomatonLogic.Transition
 
-class RegularExpression : Automaton() {
+class RegularExpression {
+    var EPSILON = "e"
+    var currentStateIndex = 0
 
-    init{
-        Type = Automatons.Regex
+    open fun regexToNfae(regex: String):NonDeterministicFiniteEpsilonAutomaton {
+        var rootNode: Node = RegularExpressionParser().Parse(regex)
+        return generateNfae(rootNode)
     }
-    override fun evaluateString(stringEvaluate: String): Boolean {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    private fun generateNfae(node:Node):NonDeterministicFiniteEpsilonAutomaton{
+        when(node){
+            is CharNode -> {
+                val nfae = NonDeterministicFiniteEpsilonAutomaton("")
+                val initial: State = State("q"+(currentStateIndex++), true, false)
+                val final: State = State("q"+(currentStateIndex++), false, true)
+                nfae.States.add(initial)
+                nfae.States.add(final)
+                initial.Transitions.add(Transition(final, node.value))
 
-    override fun addTransition(originStateName: String, destinyStateName: String, symbol: String): Boolean {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+                for(state in nfae.States){
+                    for(transition in state.Transitions){
+                        if(!nfae.Alphabet.contains(transition.Symbol)){
+                            nfae.Alphabet.add(transition.Symbol)
+                        }
+                    }
+                }
+                return nfae
+            }
+            is ANDNode -> {
+                var leftNode = generateNfae(node.leftNode)
+                var rightNode = generateNfae(node.rightNode)
+                var leftAcceptance = leftNode.getAcceptanceState()
+                var rightInitial = rightNode.getInitialState()!!
+                leftAcceptance!!.AcceptanceState = false
+                rightInitial.InitialState = false
+                leftAcceptance!!.addTransition(Transition(rightInitial, EPSILON))
+                rightNode.Alphabet.forEach { symbol -> leftNode.Alphabet.add(symbol) }
+                leftNode.Alphabet = leftNode.Alphabet.distinct().toMutableList()
+                rightNode.States.forEach { state -> leftNode.States.add(state) }
+                return leftNode
+            }
+            is ORNode -> {
+                var leftNode = generateNfae(node.leftNode)
+                var rightNode = generateNfae(node.rightNode)
 
-    fun toNonDeterministicFiniteEpsilonAutomaton(regularExpression:String):NonDeterministicFiniteEpsilonAutomaton{
-        try{
-            var rootNode: Node = RegularExpressionParser().Parse(regularExpression)
-            return constructENFA(rootNode)
+                var leftAcceptanceState=leftNode.getAcceptanceState()
+                var rightAcceptanceState=rightNode.getAcceptanceState()
+                var leftInitial = leftNode.getInitialState()
+                var rightInitial = rightNode.getInitialState()
+                leftInitial!!.InitialState = false
+                rightInitial!!.InitialState = false
+                leftAcceptanceState!!.AcceptanceState = false
+                rightAcceptanceState!!.AcceptanceState = false
+
+                val initial: State = State("q"+(currentStateIndex++), true, false)
+                val final: State = State("q"+(currentStateIndex++), false, true)
+
+                initial.addTransition(Transition(leftInitial, EPSILON))
+                initial.addTransition(Transition(rightInitial, EPSILON))
+                leftAcceptanceState.addTransition(Transition(final, EPSILON))
+                rightAcceptanceState.addTransition(Transition(final, EPSILON))
+
+                leftNode.States.add(initial)
+                leftNode.States.add(final)
+
+                for (state in rightNode.States){
+                    leftNode.States.add(state)
+                }
+
+                rightNode.Alphabet.forEach { symbol -> leftNode.Alphabet.add(symbol) }
+                leftNode.Alphabet = leftNode.Alphabet.distinct().toMutableList()
+                return leftNode
+            }
+            is RepeatNode -> {
+                var returnNode = generateNfae(node.node)
+                var initialState = returnNode.getInitialState()!!
+                var finalState = returnNode.getAcceptanceState()!!
+
+                initialState.InitialState = false
+                finalState.AcceptanceState = false
+
+                val newInitial: State = State("q"+(currentStateIndex++), true, false)
+                val newFinal: State = State("q"+(currentStateIndex++), false, true)
+
+                returnNode.States.add(newInitial)
+                returnNode.States.add(newFinal)
+
+                returnNode.addTransition(newInitial.Name, initialState.Name, EPSILON)
+                returnNode.addTransition(newInitial.Name, newFinal.Name,EPSILON)
+
+                returnNode.addTransition(finalState.Name, initialState.Name, EPSILON)
+                returnNode.addTransition(finalState.Name, newFinal.Name, EPSILON)
+
+                return returnNode
+            }
+            else -> {
+                throw Exception("not implemented")
+            }
         }
-        catch(e:Exception) {
-            println(e.message)
-        }
-        return NonDeterministicFiniteEpsilonAutomaton("")
-    }
-
-    var stateSequence = 1
-    fun constructENFA(rootNode:Node):NonDeterministicFiniteEpsilonAutomaton{
-
-
-        if(rootNode.javaClass.isInstance(CharNode(""))){
-
-            val charENFA = NonDeterministicFiniteEpsilonAutomaton("")
-            val s1 = stateSequence.toString()
-            charENFA.addState(State(s1, false, false))
-            stateSequence += 1
-            var s2 = stateSequence.toString()
-            charENFA.addState(State(s2,false, false))
-            stateSequence += 1
-            charENFA.addTransition(s1, s2, (rootNode as CharNode).value)
-            //charENFA.q0 = charENFA.States[s1.toInt()]
-            charENFA.States[s2.toInt()].AcceptanceState = true
-
-            return charENFA
-        }
-        return null!!
     }
 }

@@ -230,7 +230,8 @@ class MainWindow : JPanel(), ActionListener {
                 dfa = (iframe.automaton as NonDeterministicFiniteAutomaton).toDeterministicFiniteAutomaton()
             }
             else if(iframe.automaton.Type  == Automatons.NFAe){
-                dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
+                var nfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA()
+                dfa = nfa.toDeterministicFiniteAutomaton()
             }
 
             for(state in iframe.Nodes){
@@ -396,13 +397,13 @@ class MainWindow : JPanel(), ActionListener {
                 myFrame.automaton.Alphabet.add(symbol)
             }
             for (state in automaton.States) {
-                var rangeMinx: Double = 20.0
-                var rangeMaxx: Double = 900.0
+                var rangeMinx: Double = 15.0
+                var rangeMaxx: Double = 1800.0
                 val r = Random()
                 val randomValuex = rangeMinx + (rangeMaxx - rangeMinx) * r.nextDouble()
 
-                var rangeMiny: Double = 20.0
-                var rangeMaxy: Double = 550.0
+                var rangeMiny: Double = 15.0
+                var rangeMaxy: Double = 850.0
                 val ry = Random()
                 val randomValuey = rangeMiny + (rangeMaxy - rangeMiny) * ry.nextDouble()
 

@@ -149,7 +149,6 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         val createAutomatonItem = JMenuItem("Create Automaton")
         val openAutomatonItem = JMenuItem("Open Automaton")
         val saveAutomatonItem = JMenuItem("Save Automaton")
-        val resetItem = JMenuItem("Reset JTabbedPane")
 
         val addStateItem = JMenuItem("Add State")
         val removeStateItem = JMenuItem("Remove State")
@@ -166,6 +165,8 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         val interseccionItem = JMenuItem("Interseccion")
         val complementoItem = JMenuItem("Complemento")
         val restaItem = JMenuItem("Resta")
+
+        val regexToNFAeItem = JMenuItem("To NonDeterministic Epislon")
 
         //accelerators
         createAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK)
@@ -197,6 +198,8 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         complementoItem.addActionListener { complemento()}
         restaItem.addActionListener { resta()}
 
+        regexToNFAeItem.addActionListener { regexToNFAe() }
+
         // add items
         val optionsMenu = JMenu("Automaton")
         optionsMenu.add(createAutomatonItem)
@@ -223,14 +226,39 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         combineMenu.add(complementoItem)
         combineMenu.add(restaItem)
 
+        val regexMenu = JMenu("Regular Expression")
+        regexMenu.add(regexToNFAeItem)
+
         menuBar.add(optionsMenu)
         menuBar.add(moreOptionsMenu)
         menuBar.add(convertsMenu)
         menuBar.add(combineMenu)
+        menuBar.add(regexMenu)
         menuBar.add(this.field)
         menuBar.add(evaluateAutomatonButton)
 
         jMenuBar = menuBar
+    }
+
+    private fun regexToNFAe(){
+        val regex = JOptionPane.showInputDialog(
+                this,
+                "Convert from Regular Expression:\n" + "\"To NFAe...\"",
+                "Convesion Regex 2 NFAe",
+                JOptionPane.PLAIN_MESSAGE)
+        var regularExpressionHandler:RegularExpression = RegularExpression()
+        var nfae = NonDeterministicFiniteEpsilonAutomaton("")
+        try{
+            nfae = regularExpressionHandler.regexToNfae(regex)
+        }
+        catch(e:StackOverflowError){
+            JOptionPane.showMessageDialog(this, "StackOverflow")
+        }
+        catch(e:Exception){
+            JOptionPane.showMessageDialog(this, "Exception")
+        }
+
+        newTabOpenAutomaton(nfae)
     }
 
     private fun resta() {
@@ -363,7 +391,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
             newTabOpenAutomaton(dfa)
         }
         else if(iframe.automaton.Type  == Automatons.NFAe){
-            dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toNFA().toDeterministicFiniteAutomaton()
+            var dfa = (iframe.automaton as NonDeterministicFiniteEpsilonAutomaton).toDeterministicFiniteAutomaton()
             newTabOpenAutomaton(dfa)
         }
     }
