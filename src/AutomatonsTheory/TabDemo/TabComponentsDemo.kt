@@ -21,6 +21,7 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
     private val pane = JTabbedPane()
     internal var field = JTextField()
+    var cfg:ContextFreeGrammar =ContextFreeGrammar()
 
     internal val evaluateAutomatonButton = JButton("Evaluate")
 
@@ -70,6 +71,11 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         if(type == "TuringMachine") {
             newFrame = AutomatonFrame(TuringMachine(name, alphabet))
         }
+        if(type == "Context Free Grammar") {
+            var automaton = DeterministicFiniteAutomaton("")
+            automaton.Type = Automatons.CFG
+            newFrame = AutomatonFrame(automaton)
+        }
         newFrame.setVisible(true)
 
         pane.add(name + "(Type: " + type + ")", newFrame)
@@ -91,7 +97,13 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         dialog.displayGUI()
 
         if(dialog.valor == 0){
-            newTab(dialog.automatonNameTextField.text, dialog.automatonType, dialog.charactersList)
+            if(dialog.automatonType == "Context Free Grammar"){
+                newTab(dialog.automatonNameTextField.text, dialog.automatonType,dialog.charactersList)
+            }
+            else{
+                newTab(dialog.automatonNameTextField.text, dialog.automatonType, dialog.charactersList)
+            }
+
         }
     }
 
@@ -168,6 +180,9 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
         val regexToNFAeItem = JMenuItem("To NonDeterministic Epislon")
 
+        val addBranchItem = JMenuItem("Add Branch to CFG")
+        val convertToPDA = JMenuItem("Convert to PDA")
+
         //accelerators
         createAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK)
         openAutomatonItem.accelerator = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK)
@@ -200,6 +215,9 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
 
         regexToNFAeItem.addActionListener { regexToNFAe() }
 
+        addBranchItem.addActionListener{addBranch()}
+        convertToPDA.addActionListener{converToPDA()}
+
         // add items
         val optionsMenu = JMenu("Automaton")
         optionsMenu.add(createAutomatonItem)
@@ -229,15 +247,38 @@ class TabComponentsDemo(title: String) : JFrame(title), ActionListener {
         val regexMenu = JMenu("Regular Expression")
         regexMenu.add(regexToNFAeItem)
 
+        val cfg = JMenu("Context Free Grammar")
+        cfg.add(addBranchItem)
+        cfg.add(convertToPDA)
+
+
         menuBar.add(optionsMenu)
         menuBar.add(moreOptionsMenu)
         menuBar.add(convertsMenu)
         menuBar.add(combineMenu)
         menuBar.add(regexMenu)
+        menuBar.add(cfg)
         menuBar.add(this.field)
         menuBar.add(evaluateAutomatonButton)
 
         jMenuBar = menuBar
+    }
+
+    private fun converToPDA() {
+        var automaton = cfg.transformarPDA()
+        newTabOpenAutomaton(automaton)
+    }
+
+    private fun addBranch() {
+
+        if((pane.getComponentAt(pane.selectedIndex) as AutomatonFrame).automaton.Type == Automatons.CFG){
+            val dialog = AddBranchGrammarFreeDialog();
+            dialog.displayGUI()
+            if (dialog.valor == 0) {
+                cfg.addBranch(dialog.symbol[0], dialog.produccion)
+            }
+        }
+
     }
 
     private fun regexToNFAe(){
