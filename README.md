@@ -3,28 +3,28 @@ Automaton Theory: Kotlin programming language using Swing for the graphical user
 
 This project is about all the Computer Theory of Automatons
 Includes algorithms for solving automatons issues
-Graphical user interface for modelink automatons
+Graphical user interface for modeling automatons
 
 # Solving
-Deterministic Finite Automaton (DFA) also known as Finite State Machine(FSA)
-Non Deterministic Finite Automaton (NFA)
-Non Deterministic Finite Automaton Epsilon (NFAe)
-Push Down Automaton (PDA)
-Turing Machine
+*Deterministic Finite Automaton (DFA) also known as Finite State Machine(FSA)
+*Non Deterministic Finite Automaton (NFA)
+*Non Deterministic Finite Automaton Epsilon (NFAe)
+*Push Down Automaton (PDA)
+*Turing Machine
 
 # Converting
-From NFA to DFA
-From NFAe to DFA
-From DFA to Regular Expression(Regex)
-From Context Free Grammar(CFG or CFL) to PDA
-Minimizing DFA
-Regular Expression to NFAe
+*From NFA to DFA
+*From NFAe to DFA
+*From DFA to Regular Expression(Regex)
+*From Context Free Grammar(CFG or CFL) to PDA
+*Minimizing DFA
+*Regular Expression to NFAe
 
 # Operations
-Union
-Intersection
-Substraction
-Complement
+*Union
+*Intersection
+*Substraction
+*Complement
 
 # Usage
 When converting from regular expression to nfae it is necessary to append a dot(.) for every union
