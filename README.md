@@ -7,23 +7,35 @@ Graphical user interface for modeling automatons
 
 # Solving
 *Deterministic Finite Automaton (DFA) also known as Finite State Machine(FSA)
+
 *Non Deterministic Finite Automaton (NFA)
+
 *Non Deterministic Finite Automaton Epsilon (NFAe)
+
 *Push Down Automaton (PDA)
+
 *Turing Machine
 
 # Converting
 *From NFA to DFA
+
 *From NFAe to DFA
+
 *From DFA to Regular Expression(Regex)
+
 *From Context Free Grammar(CFG or CFL) to PDA
+
 *Minimizing DFA
+
 *Regular Expression to NFAe
 
 # Operations
 *Union
+
 *Intersection
+
 *Substraction
+
 *Complement
 
 # Usage
