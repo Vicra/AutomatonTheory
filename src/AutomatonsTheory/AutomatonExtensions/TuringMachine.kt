@@ -56,7 +56,7 @@ class TuringMachine() : DeterministicFiniteAutomaton("") {
                     val stringbuilder = StringBuilder(cinta)
                     stringbuilder[pointer] = currentTransition.Symbol[2]
                     cinta = stringbuilder.toString()
-                    val direction = currentTransition.Symbol[4].toString()
+                        val direction = currentTransition.Symbol[4].toString()
                     if(direction == "L"){
                         pointer -= 1
                     }

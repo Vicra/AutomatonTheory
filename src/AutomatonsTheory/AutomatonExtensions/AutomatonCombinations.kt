@@ -29,6 +29,7 @@ open class AutomatonCombinations {
         return returnDFA
     }
 
+
     fun Intersection(automatonA:DeterministicFiniteAutomaton, automatonB:DeterministicFiniteAutomaton) : DeterministicFiniteAutomaton{
         var returnDFA:DeterministicFiniteAutomaton = merge(automatonA, automatonB)
         returnDFA.AutomatonName = "Interseccion: " + automatonA.AutomatonName + " " + automatonB.AutomatonName
