@@ -34,7 +34,7 @@ Graphical user interface for modeling automatons
 
 *Intersection
 
-*Substraction
+*Subtraction
 
 *Complement
 
